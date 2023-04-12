@@ -41,6 +41,10 @@ func (dt DateTime) FormatUTC(layout string) string {
 	return dt.Time().UTC().Format(layout)
 }
 
+func (dt DateTime) NullDateTime() NullDateTime {
+	return NewNullDateTime(&dt)
+}
+
 func (dt *DateTime) parse(layout string, s string) {
 	dt.origin, dt.parseErr = time.Time{}, nil
 	if s == "" {
