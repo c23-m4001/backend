@@ -105,3 +105,7 @@ func GetJwtGitIgnoreFilePath() string {
 func GetTimeLocation() *time.Location {
 	return GetConfig().timeLocation
 }
+
+func IsDebug() bool {
+	return GetConfig().IsDebug
+}
