@@ -26,10 +26,11 @@ type YamlConfig struct {
 	BaseDir      string
 	StorageDir   string
 
-	DatabaseConfig DatabaseConfig `yaml:"database"`
-	Environment    string         `yaml:"environment"`
-	IsDebug        bool           `yaml:"debug"`
-	Timezone       string         `yaml:"timezone"`
+	CorsAllowedOrigins []string       `yaml:"cors_allowed_origins"`
+	DatabaseConfig     DatabaseConfig `yaml:"database"`
+	Environment        string         `yaml:"environment"`
+	IsDebug            bool           `yaml:"debug"`
+	Timezone           string         `yaml:"timezone"`
 }
 
 var config YamlConfig
@@ -102,10 +103,18 @@ func GetJwtGitIgnoreFilePath() string {
 	return fmt.Sprintf("%s/jwt/.gitignore", GetStorageDir())
 }
 
+func GetPostgresConfig() DatabaseConfig {
+	return GetConfig().DatabaseConfig
+}
+
 func GetTimeLocation() *time.Location {
 	return GetConfig().timeLocation
 }
 
 func IsDebug() bool {
 	return GetConfig().IsDebug
+}
+
+func IsProduction() bool {
+	return !GetConfig().IsDebug
 }
