@@ -2,93 +2,48 @@ package api
 
 import (
 	"capstone/config"
-	"capstone/delivery/dto_response"
+	"capstone/delivery/middleware"
 	"capstone/manager"
-	"capstone/util"
-	"context"
-	"encoding/json"
-	"fmt"
+	"capstone/model"
 	"net/http"
 	"time"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
-	"github.com/iancoleman/strcase"
 )
 
-type apiContext struct {
-	ginCtx *gin.Context
+type api struct {
 }
 
-func (a *apiContext) context() context.Context {
-	return a.ginCtx.Request.Context()
-}
+func (a *api) Authorize(fn func(ctx apiContext)) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		apiCtx := newApiContext(ctx)
 
-func (a *apiContext) getClientIp() string {
-	return a.ginCtx.ClientIP()
-}
+		// check user authenticated
+		model.MustGetUserCtx(apiCtx.context())
 
-func (a *apiContext) getParam(key string) string {
-	return a.ginCtx.Param(key)
-}
-
-func (a *apiContext) getUuidParam(key string) string {
-	uuidParam := a.getParam(key)
-
-	if !util.IsUuid(uuidParam) {
-		panic(dto_response.NewBadRequestResponse(fmt.Sprintf("%s must be a valid UUID", strcase.ToCamel(key))))
-	}
-
-	return uuidParam
-}
-
-func (a *apiContext) shouldBind(obj interface{}) error {
-	return util.ShouldGinBind(a.ginCtx, obj)
-}
-
-func (a *apiContext) mustBind(obj interface{}) {
-	if err := a.shouldBind(obj); err != nil {
-		panic(a.translateBindErr(err))
+		fn(apiCtx)
 	}
 }
 
-func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
-	var r dto_response.ErrorResponse
-
-	switch v := err.(type) {
-	case *json.UnmarshalTypeError:
-		r = dto_response.NewBadRequestResponse("Invalid request payload (type error)")
-
-	case *json.InvalidUnmarshalError:
-		r = dto_response.NewBadRequestResponse("Invalid request payload (unmarshal error)")
-
-	default:
-		switch v {
-		case binding.ErrConvertMapStringSlice,
-			binding.ErrConvertToMapString,
-			binding.ErrMultiFileHeader,
-			binding.ErrMultiFileHeaderLenInvalid:
-			r = dto_response.NewBadRequestResponse("Invalid request payload (unmarshal error)")
-
-		default:
-			panic(err)
-		}
+func (a *api) Guest(fn func(ctx apiContext)) gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		fn(newApiContext(ctx))
 	}
-
-	return r
 }
 
-func (a *apiContext) json(code int, obj interface{}) {
-	a.ginCtx.JSON(code, obj)
+func newApi() api {
+	return api{}
 }
 
 func registerMiddlewares(router gin.IRouter, container *manager.Container) {
+	useCaseManager := container.UseCaseManager()
 
+	middleware.PanicHandler(router)
+	middleware.JWTHandler(router, useCaseManager.AuthUseCase())
 }
 
 func registerRoutes(router gin.IRouter, useCasemanager manager.UseCaseManager) {
-
 }
 
 func NewRouter(container *manager.Container) *gin.Engine {
