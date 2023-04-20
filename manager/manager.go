@@ -20,16 +20,20 @@ type Container struct {
 	useCaseManager        UseCaseManager
 }
 
-func (m *Container) InfrastructureManager() InfrastructureManager {
+func (m Container) InfrastructureManager() InfrastructureManager {
 	return m.infrastructureManager
 }
 
-func (m *Container) RepositoryManager() RepositoryManager {
+func (m Container) RepositoryManager() RepositoryManager {
 	return m.repositoryManager
 }
 
-func (m *Container) UseCaseManager() UseCaseManager {
+func (m Container) UseCaseManager() UseCaseManager {
 	return m.useCaseManager
+}
+
+func (m Container) Close() error {
+	return m.InfrastructureManager().Close()
 }
 
 func NewContainer(managerConfig ManagerConfig) *Container {
