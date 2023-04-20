@@ -1,8 +1,13 @@
-//go:build tools
+// //go:build tools
 
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"capstone/config"
+	"capstone/manager"
+
+	"github.com/spf13/cobra"
+)
 
 func init() {
 	rootCmd.AddCommand(migrateCommand())
@@ -17,7 +22,12 @@ func migrateCommand() *cobra.Command {
 		Short: "Migrate database table",
 		Long:  "Migrate database table using steps or rollback",
 		Run: func(cmd *cobra.Command, args []string) {
+			config.DisableDebug()
 
+			container := manager.NewContainer(manager.LoadDefault)
+			if err := container.InfrastructureManager().MigrateDB(isRollingBack, steps); err != nil {
+				panic(err)
+			}
 		},
 	}
 
