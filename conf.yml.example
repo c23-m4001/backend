@@ -1,0 +1,12 @@
+environment: development
+port: 8080
+cors_allowed_origins:
+  - "*"
+database:
+  host: postgres
+  port: 5432
+  username: admin
+  password: pass
+  database_name: db
+debug: true
+timezone: Asia/Jakarta
