@@ -11,10 +11,10 @@ type UserAccessToken struct {
 	UserId       string             `db:"user_id"`
 	Revoked      bool               `db:"revoked"`
 	ExpiredAt    data_type.DateTime `db:"expired_at"`
-	IpAddress    string             `db:"ip_address"`
-	Longitude    float64            `db:"longitude"`
-	Latitude     float64            `db:"latitude"`
-	LocationName string             `db:"location_name"`
+	IpAddress    *string            `db:"ip_address"`
+	Longitude    *float64           `db:"longitude"`
+	Latitude     *float64           `db:"latitude"`
+	LocationName *string            `db:"location_name"`
 	Timestamp
 }
 
