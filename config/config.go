@@ -63,7 +63,7 @@ func LoadConfig() error {
 
 	yamlFilePath := fmt.Sprintf("%s/conf.yml", config.BaseDir)
 	if _, err := os.Stat(yamlFilePath); err != nil {
-		return err
+		return fmt.Errorf("conf.yml file not found")
 	}
 
 	yamlFile, err := ioutil.ReadFile(yamlFilePath)
