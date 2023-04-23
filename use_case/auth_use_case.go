@@ -141,7 +141,14 @@ func (u *authUseCase) RegisterEmail(ctx context.Context, request dto_request.Aut
 		u.userRepository.Insert(ctx, &user),
 	)
 
-	panic("unimplemented")
+	accessToken, err := u.generateJwt(ctx, user.Id)
+	panicIfErr(err)
+
+	return model.Token{
+		AccessToken:          accessToken.AccessToken,
+		AccessTokenExpiredAt: data_type.NewDateTime(accessToken.ExpiredAt),
+		TokenType:            accessToken.Type,
+	}
 }
 
 func (u *authUseCase) Parse(ctx context.Context, token string) (*model.User, error) {
