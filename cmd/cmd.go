@@ -1,9 +1,6 @@
 package cmd
 
 import (
-	"capstone/config"
-	"capstone/delivery/api"
-	"capstone/manager"
 	"fmt"
 	"os"
 
@@ -11,24 +8,11 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "backend",
-	Short: "Run server",
-	Long:  `Run backend server`,
+	Use:   "help",
+	Short: "List of command available",
+	Long:  "List of command available\nif you don't see any other command beside 'help'.\nYou need to supply 'tags' to your go command\nfor example: go run -tags tools .",
 	Run: func(cmd *cobra.Command, args []string) {
-		container := manager.NewContainer(manager.LoadDefault)
-		defer func() {
-			if err := container.Close(); err != nil {
-				panic(err)
-			}
-		}()
-
-		router := api.NewRouter(container)
-
-		addr := fmt.Sprintf(":%d", config.GetConfig().Port)
-		err := router.Run(addr)
-		if err != nil {
-			panic(err)
-		}
+		cmd.Help()
 	},
 }
 
