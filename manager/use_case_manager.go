@@ -1,6 +1,7 @@
 package manager
 
 import (
+	geoIpInternal "capstone/internal/geoip"
 	jwtInternal "capstone/internal/jwt"
 	"capstone/use_case"
 )
@@ -20,12 +21,14 @@ func (m *useCaseManager) AuthUseCase() use_case.AuthUseCase {
 func newUseCaseManager(
 	infrastructureManager InfrastructureManager,
 	repositoryManager RepositoryManager,
+	geoIp geoIpInternal.GeoIp,
 	jwt jwtInternal.Jwt,
 ) UseCaseManager {
 	return &useCaseManager{
 		authUseCase: use_case.NewAuthUseCase(
 			repositoryManager.UserAccessTokenRepository(),
 			repositoryManager.UserRepository(),
+			geoIp,
 			jwt,
 		),
 	}

@@ -5,6 +5,7 @@ import (
 	"capstone/data_type"
 	"capstone/delivery/dto_request"
 	"capstone/delivery/dto_response"
+	geoIpInternal "capstone/internal/geoip"
 	jwtInternal "capstone/internal/jwt"
 	"capstone/model"
 	"capstone/repository"
@@ -28,19 +29,22 @@ type authUseCase struct {
 	userAccessTokenRepository repository.UserAccessTokenRepository
 	userRepository            repository.UserRepository
 
-	jwt jwtInternal.Jwt
+	geoIp geoIpInternal.GeoIp
+	jwt   jwtInternal.Jwt
 }
 
 func NewAuthUseCase(
 	userAccessTokenRepository repository.UserAccessTokenRepository,
 	userRepository repository.UserRepository,
+	geoIp geoIpInternal.GeoIp,
 	jwt jwtInternal.Jwt,
 ) AuthUseCase {
 	return &authUseCase{
 		userAccessTokenRepository: userAccessTokenRepository,
 		userRepository:            userRepository,
 
-		jwt: jwt,
+		geoIp: geoIp,
+		jwt:   jwt,
 	}
 }
 
@@ -52,15 +56,21 @@ func (u *authUseCase) generateJwt(ctx context.Context, userId string) (*jwtInter
 	)
 
 	userAccessToken := &model.UserAccessToken{
-		Id:           util.NewUuid(),
-		UserId:       userId,
-		Revoked:      false,
-		ExpiredAt:    expiredAt,
-		IpAddress:    nil,
-		Longitude:    nil,
-		Latitude:     nil,
-		LocationName: nil,
-		Timestamp:    model.Timestamp{},
+		Id:        util.NewUuid(),
+		UserId:    userId,
+		Revoked:   false,
+		ExpiredAt: expiredAt,
+	}
+
+	currentIp := model.GetIpCtx(ctx)
+	if currentIp != "" {
+		payload, err := u.geoIp.ParseIP(currentIp)
+		panicIfErr(err)
+
+		userAccessToken.IpAddress = &currentIp
+		userAccessToken.Latitude = &payload.Latitude
+		userAccessToken.Longitude = &payload.Longitude
+		userAccessToken.LocationName = util.StringP(fmt.Sprintf("%s %s", payload.City, payload.Subdivision))
 	}
 
 	for maxGenerationAttempts > 0 {
