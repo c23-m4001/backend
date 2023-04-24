@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type DateTime struct {
@@ -43,6 +45,15 @@ func (dt DateTime) FormatUTC(layout string) string {
 
 func (dt DateTime) NullDateTime() NullDateTime {
 	return NewNullDateTime(&dt)
+}
+
+func (dt DateTime) HasParseErr() bool {
+	hasParseError := dt.parseErr != nil
+	return hasParseError
+}
+
+func (dt DateTime) IsValid() bool {
+	return !(dt.IsZero() || dt.HasParseErr())
 }
 
 func (dt *DateTime) parse(layout string, s string) {
@@ -120,4 +131,11 @@ func (dt DateTime) Value() (driver.Value, error) {
 
 func NewDateTime(t time.Time) DateTime {
 	return DateTime{origin: t.In(config.GetTimeLocation())}
+}
+
+func DateTimeValidationFn(sl validator.StructLevel) {
+	dateTime := sl.Current().Interface().(DateTime)
+	if !dateTime.IsValid() {
+		sl.ReportError(dateTime, "", "", "data_type_date_time", "")
+	}
 }
