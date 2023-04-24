@@ -3,13 +3,14 @@ package middleware
 import (
 	"capstone/constant"
 	"capstone/delivery/dto_response"
+	"capstone/infrastructure"
 	"fmt"
 	"runtime/debug"
 
 	"github.com/gin-gonic/gin"
 )
 
-func PanicHandler(router gin.IRouter) {
+func PanicHandler(router gin.IRouter, loggerStack infrastructure.LoggerStack) {
 	router.Use(func(ctx *gin.Context) {
 		defer func() {
 			if r := recover(); r != nil {
@@ -47,7 +48,7 @@ func PanicHandler(router gin.IRouter) {
 					logMessage += "\n"
 				}
 				logMessage += string(debug.Stack())
-				// loggerStack.WriteAll(logMessage)
+				loggerStack.WriteAll(logMessage)
 
 				if debugStackResponse == nil {
 					debugStackResponse = dto_response.NewInternalServerErrorResponseP()
