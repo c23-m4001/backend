@@ -17,4 +17,4 @@ FROM alpine:latest
 COPY --from=builder /project/capstone/build/capstone /project/capstone/build/capstone
 
 EXPOSE 8080
-ENTRYPOINT [ "/project/capstone/build/capstone", "http" ]
+ENTRYPOINT [ "cd" "/project/capstone/build", "&&" , "./capstone", "http" ]
