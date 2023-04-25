@@ -10,6 +10,9 @@ RUN go mod download
 COPY . .
 RUN go build -tags http -o /project/capstone/build/capstone .
 
+# to fix timezone not loaded
+RUN apk add --no-cache tzdata
+
 FROM alpine:latest
 COPY --from=builder /project/capstone/build/capstone /project/capstone/build/capstone
 
