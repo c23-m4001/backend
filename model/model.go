@@ -50,6 +50,18 @@ type QueryOption struct {
 	IsCount bool
 }
 
+func NewBasicQueryOption(limit *int, page *int, sorts Sorts) QueryOption {
+	return QueryOption{
+		SelectOption: SelectOption{
+			Sorts: sorts,
+		},
+		PaginationOption: PaginationOption{
+			Limit: limit,
+			Page:  page,
+		},
+	}
+}
+
 func (o QueryOption) Prepare(stmt squirrel.SelectBuilder) squirrel.SelectBuilder {
 	if o.IsCount {
 		o.Fields = []string{"COUNT(*) as count"}
