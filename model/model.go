@@ -127,3 +127,43 @@ func (o PaginationOption) Prepare(stmt squirrel.SelectBuilder) squirrel.SelectBu
 	}
 	return stmt
 }
+
+func (o QueryOption) translateSort(field string, direction string) Sorts {
+	return Sorts{
+		{Field: field, Direction: direction},
+	}
+}
+
+func (o *QueryOption) translateSorts(m BaseModel, translateFn func(field string, direction string) Sorts) {
+	if len(o.Sorts) > 0 {
+		var (
+			uniqueFields    = m.TableIds()
+			sorts           = Sorts{}
+			hasUniqueFields = false
+		)
+
+		uniqueFields = append(uniqueFields, "created_at", "updated_at")
+
+		for _, sort := range o.Sorts {
+			sorts = append(
+				sorts,
+				translateFn(sort.Field, sort.Direction)...,
+			)
+
+			if !hasUniqueFields && util.StringInSlice(sort.Field, uniqueFields) {
+				hasUniqueFields = true
+			}
+		}
+
+		if !hasUniqueFields {
+			sorts = append(
+				sorts,
+				Sorts{
+					{Field: "created_at", Direction: "asc"},
+				}...,
+			)
+		}
+
+		o.Sorts = sorts
+	}
+}
