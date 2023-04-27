@@ -151,7 +151,7 @@ func get(db infrastructure.DBTX, dest interface{}, stmt squirrel.Sqlizer) error 
 	return translateSqlError(db.Get(dest, query, args...))
 }
 
-func count(db infrastructure.DBTX, dest interface{}, stmt squirrel.Sqlizer) (int, error) {
+func count(db infrastructure.DBTX, stmt squirrel.Sqlizer) (int, error) {
 	query, args, err := stmt.ToSql()
 	if err != nil {
 		return 0, translateSqlError(err)
