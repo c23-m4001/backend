@@ -60,6 +60,7 @@ func (u *walletUseCase) Fetch(ctx context.Context, request dto_request.WalletFet
 	queryOption := model.WalletQueryOption{
 		QueryOption: model.NewBasicQueryOption(request.Limit, request.Page, model.Sorts(request.Sorts)),
 		Phrase:      request.Phrase,
+		UserId:      util.StringP(model.MustGetUserCtx(ctx).Id),
 	}
 
 	wallets, err := u.walletRepository.Fetch(ctx, queryOption)

@@ -44,7 +44,7 @@ func (a *WalletApi) Create() gin.HandlerFunc {
 }
 
 //	@Router		/wallets/filter [post]
-//	@Summary	Fetch
+//	@Summary	Fetch current user wallet list
 //	@tags		Wallet
 //	@Accept		json
 //	@Produce	json
