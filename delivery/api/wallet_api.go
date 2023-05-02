@@ -18,7 +18,7 @@ type WalletApi struct {
 
 //	@Router		/wallets [post]
 //	@Summary	Create
-//	@tags		User
+//	@tags		Wallet
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.WalletCreateRequest	body		dto_request.WalletCreateRequest	true	"Body Request"
@@ -45,7 +45,7 @@ func (a *WalletApi) Create() gin.HandlerFunc {
 
 //	@Router		/wallets/filter [post]
 //	@Summary	Fetch
-//	@tags		User
+//	@tags		Wallet
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.WalletFetchRequest	body		dto_request.WalletFetchRequest	true	"Body Request"
@@ -80,7 +80,7 @@ func (a *WalletApi) Fetch() gin.HandlerFunc {
 
 //	@Router		/wallets/{id} [put]
 //	@Summary	Update
-//	@tags		User
+//	@tags		Wallet
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.WalletUpdateRequest	body		dto_request.WalletUpdateRequest	true	"Body Request"
