@@ -78,6 +78,37 @@ func (a *WalletApi) Fetch() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/wallets/{id} [get]
+//	@Summary	Get
+//	@tags		Wallet
+//	@Accept		json
+//	@Produce	json
+//	@Param		dto_request.WalletGetRequest	body		dto_request.WalletGetRequest	true	"Body Request"
+//	@Param		id								path		string							true	"Id"	format(uuid)
+//	@Success	200								{object}	dto_response.Response{data=dto_response.DataResponse{wallet=[]dto_response.WalletResponse}}
+func (a *WalletApi) Get() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			id := ctx.getUuidParam("id")
+
+			var request dto_request.WalletGetRequest
+
+			request.WalletId = id
+
+			wallet := a.walletUseCase.Get(ctx.context(), request)
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.DataResponse{
+						"wallet": dto_response.NewWalletResponse(wallet),
+					},
+				},
+			)
+		},
+	)
+}
+
 //	@Router		/wallets/{id} [put]
 //	@Summary	Update
 //	@tags		Wallet
@@ -89,8 +120,12 @@ func (a *WalletApi) Fetch() gin.HandlerFunc {
 func (a *WalletApi) Update() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
+			id := ctx.getUuidParam("id")
+
 			var request dto_request.WalletUpdateRequest
 			ctx.mustBind(&request)
+
+			request.WalletId = id
 
 			wallet := a.walletUseCase.Update(ctx.context(), request)
 
@@ -116,5 +151,6 @@ func RegisterWalletApi(router gin.IRouter, useCaseManager manager.UseCaseManager
 
 	routerGroup.POST("", api.Create())
 	routerGroup.POST("/filter", api.Fetch())
+	routerGroup.GET("/:id", api.Get())
 	routerGroup.PUT("/:id", api.Update())
 }

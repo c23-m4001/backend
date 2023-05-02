@@ -18,6 +18,10 @@ type WalletFetchRequest struct {
 	Phrase *string          `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name WalletFetchRequest
 
+type WalletGetRequest struct {
+	WalletId string `json:"-" swaggerignore:"true"`
+} // @name WalletGetRequest
+
 type WalletUpdateRequest struct {
 	Name     string                   `json:"name" validate:"required,not_empty" example:"Cash"`
 	LogoType data_type.WalletLogoType `json:"logo_type" validate:"required,data_type_enum"`
