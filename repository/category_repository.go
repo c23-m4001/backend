@@ -59,18 +59,27 @@ func (r *categoryRepository) prepareQuery(option model.CategoryQueryOption) squi
 	stmt := stmtBuilder.Select().
 		From(model.CategoryTableName)
 
-	if option.IsGlobal != nil {
-		stmt = stmt.Where(squirrel.Eq{"is_global": option.IsGlobal})
-	}
+	orStatements := squirrel.Or{}
+	andStatements := squirrel.And{}
 
 	if option.UserId != nil {
-		stmt = stmt.Where(squirrel.Eq{"user_id": option.UserId})
+		andStatements = append(andStatements, squirrel.Eq{"user_id": option.UserId})
 	}
 
 	if option.Phrase != nil {
 		phrase := "%" + *option.Phrase + "%"
-		stmt = stmt.Where(squirrel.ILike{"name": phrase})
+		andStatements = append(andStatements, squirrel.ILike{"name": phrase})
 	}
+
+	if option.IncludeGlobal != nil {
+		orStatements = squirrel.Or{
+			squirrel.Eq{"is_global": option.IncludeGlobal},
+		}
+	}
+
+	orStatements = append(orStatements, andStatements)
+
+	stmt = stmt.Where(orStatements)
 
 	stmt = option.Prepare(stmt)
 
