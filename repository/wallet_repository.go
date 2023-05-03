@@ -4,7 +4,6 @@ import (
 	"capstone/infrastructure"
 	"capstone/model"
 	"context"
-	"fmt"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -60,7 +59,7 @@ func (r *walletRepository) get(stmt squirrel.Sqlizer) (*model.Wallet, error) {
 
 func (r *walletRepository) prepareQuery(option model.WalletQueryOption) squirrel.SelectBuilder {
 	stmt := stmtBuilder.Select().
-		From(fmt.Sprintf("%s w", model.WalletTableName))
+		From(model.WalletTableName)
 
 	if option.UserId != nil {
 		stmt = stmt.Where(squirrel.Eq{"user_id": option.UserId})
