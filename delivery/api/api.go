@@ -46,6 +46,7 @@ func registerMiddlewares(router gin.IRouter, container *manager.Container) {
 
 func registerRoutes(router gin.IRouter, useCasemanager manager.UseCaseManager) {
 	RegisterAuthApi(router, useCasemanager)
+	RegisterCategoryApi(router, useCasemanager)
 	RegisterUserApi(router, useCasemanager)
 	RegisterWalletApi(router, useCasemanager)
 }
