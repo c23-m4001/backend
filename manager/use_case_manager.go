@@ -37,6 +37,7 @@ func newUseCaseManager(
 	jwt jwtInternal.Jwt,
 ) UseCaseManager {
 	baseUseCase := use_case.NewBaseUseCase(
+		repositoryManager.CategoryRepository(),
 		repositoryManager.WalletRepository(),
 	)
 
