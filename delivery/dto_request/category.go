@@ -2,7 +2,6 @@ package dto_request
 
 type CategoryCreateRequest struct {
 	Name      string `json:"name" validate:"required,not_empty" example:"Makanan"`
-	IsGlobal  bool   `json:"is_global"`
 	IsExpense bool   `json:"is_expense"`
 } // @name CategoryCreateRequest
 
@@ -23,7 +22,6 @@ type CategoryGetRequest struct {
 
 type CategoryUpdateRequest struct {
 	Name      string `json:"name" validate:"required,not_empty"`
-	IsGlobal  bool   `json:"is_global"`
 	IsExpense bool   `json:"is_expense"`
 
 	CategoryId string `json:"-" swaggerignore:"true"`
