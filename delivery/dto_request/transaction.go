@@ -24,6 +24,10 @@ type TransactionFetchRequest struct {
 	Phrase     *string `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name TransactionFetchRequest
 
+type TransactionGetRequest struct {
+	TransactionId string `json:"-" swaggerignore:"true"`
+} // @name TransactionGetRequest
+
 type TransactionUpdateRequest struct {
 	Name   string         `json:"name" validate:"required,not_empty" example:"Makan Siang"`
 	Amount float64        `json:"amount" validate:"required,gte=0" example:"10000"`
