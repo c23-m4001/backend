@@ -44,11 +44,12 @@ func registerMiddlewares(router gin.IRouter, container *manager.Container) {
 	middleware.JWTHandler(router, useCaseManager.AuthUseCase())
 }
 
-func registerRoutes(router gin.IRouter, useCasemanager manager.UseCaseManager) {
-	RegisterAuthApi(router, useCasemanager)
-	RegisterCategoryApi(router, useCasemanager)
-	RegisterUserApi(router, useCasemanager)
-	RegisterWalletApi(router, useCasemanager)
+func registerRoutes(router gin.IRouter, useCaseManager manager.UseCaseManager) {
+	RegisterAuthApi(router, useCaseManager)
+	RegisterCategoryApi(router, useCaseManager)
+	RegisterTransactionApi(router, useCaseManager)
+	RegisterUserApi(router, useCaseManager)
+	RegisterWalletApi(router, useCaseManager)
 }
 
 func NewRouter(container *manager.Container) *gin.Engine {
