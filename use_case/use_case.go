@@ -7,17 +7,20 @@ import (
 )
 
 type baseUseCase struct {
-	categoryRepository repository.CategoryRepository
-	walletRepository   repository.WalletRepository
+	categoryRepository    repository.CategoryRepository
+	transactionRepository repository.TransactionRepository
+	walletRepository      repository.WalletRepository
 }
 
 func NewBaseUseCase(
 	categoryRepository repository.CategoryRepository,
+	transactionRepository repository.TransactionRepository,
 	walletRepository repository.WalletRepository,
 ) *baseUseCase {
 	return &baseUseCase{
-		categoryRepository: categoryRepository,
-		walletRepository:   walletRepository,
+		categoryRepository:    categoryRepository,
+		transactionRepository: transactionRepository,
+		walletRepository:      walletRepository,
 	}
 }
 
@@ -25,6 +28,12 @@ func (u *baseUseCase) mustGetWallet(ctx context.Context, walletId string, isPath
 	wallet, err := u.walletRepository.Get(ctx, walletId)
 	panicIfRepositoryError(err, "Wallet data not found", isPath)
 	return *wallet
+}
+
+func (u *baseUseCase) mustGetTransaction(ctx context.Context, transactionId string, isPath bool) model.Transaction {
+	transaction, err := u.transactionRepository.Get(ctx, transactionId)
+	panicIfRepositoryError(err, "Transaction data not found", isPath)
+	return *transaction
 }
 
 func (u *baseUseCase) mustGetCategory(ctx context.Context, categoryId string, isPath bool) model.Category {

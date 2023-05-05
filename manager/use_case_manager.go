@@ -44,6 +44,7 @@ func newUseCaseManager(
 ) UseCaseManager {
 	baseUseCase := use_case.NewBaseUseCase(
 		repositoryManager.CategoryRepository(),
+		repositoryManager.TransactionRepository(),
 		repositoryManager.WalletRepository(),
 	)
 
