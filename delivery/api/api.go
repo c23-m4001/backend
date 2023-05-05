@@ -52,7 +52,6 @@ func registerRoutes(router gin.IRouter, useCasemanager manager.UseCaseManager) {
 }
 
 func NewRouter(container *manager.Container) *gin.Engine {
-
 	if config.IsProduction() {
 		gin.SetMode(gin.ReleaseMode)
 	}
