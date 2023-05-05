@@ -4,6 +4,7 @@ import "capstone/repository"
 
 type RepositoryManager interface {
 	CategoryRepository() repository.CategoryRepository
+	TransactionRepository() repository.TransactionRepository
 	UserAccessTokenRepository() repository.UserAccessTokenRepository
 	UserRepository() repository.UserRepository
 	WalletRepository() repository.WalletRepository
@@ -11,6 +12,7 @@ type RepositoryManager interface {
 
 type repositoryManager struct {
 	categoryRepository        repository.CategoryRepository
+	transactionRepository     repository.TransactionRepository
 	userAccessTokenRepository repository.UserAccessTokenRepository
 	userRepository            repository.UserRepository
 	walletRepository          repository.WalletRepository
@@ -18,6 +20,10 @@ type repositoryManager struct {
 
 func (m *repositoryManager) CategoryRepository() repository.CategoryRepository {
 	return m.categoryRepository
+}
+
+func (m *repositoryManager) TransactionRepository() repository.TransactionRepository {
+	return m.transactionRepository
 }
 
 func (m *repositoryManager) UserAccessTokenRepository() repository.UserAccessTokenRepository {
@@ -36,6 +42,7 @@ func newRepositoryManager(infrastructureManager InfrastructureManager) Repositor
 	db := infrastructureManager.GetDB()
 	return &repositoryManager{
 		categoryRepository:        repository.NewCategoryRepository(db),
+		transactionRepository:     repository.NewTransactionRepository(db),
 		userAccessTokenRepository: repository.NewUserAccessTokenRepository(db),
 		userRepository:            repository.NewUserRepository(db),
 		walletRepository:          repository.NewWalletRepository(db),
