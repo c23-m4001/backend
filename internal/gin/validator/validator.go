@@ -171,6 +171,8 @@ func (v *defaultValidator) lazyinit() {
 			}
 		}
 
+		v.validate.RegisterStructValidation(data_type.DateValidationFn, data_type.Date{})
+		v.validate.RegisterStructValidation(data_type.NullDateValidationFn, data_type.NullDate{})
 		v.validate.RegisterStructValidation(data_type.DateTimeValidationFn, data_type.DateTime{})
 		v.validate.RegisterStructValidation(data_type.NullDateTimeValidationFn, data_type.NullDateTime{})
 
