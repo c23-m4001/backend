@@ -1,0 +1,19 @@
+# global
+CORS: 'CORS Error: This endpoint does not allow requests from this origin'
+FORBIDDEN: Forbidden
+
+INVALID_REQUEST_PAYLOAD: Invalid request payload
+INVALID_REQUEST_PAYLOAD.TYPE_ERROR: Invalid request payload (type error)
+INVALID_REQUEST_PAYLOAD.UNMARSHAL_ERROR: Invalid request payload (unmarshal error)
+
+# auth
+AUTH.EMAIL_REGISTERED: Email registered
+AUTH.EMAIL_NOT_REGISTERED: Email not registered
+AUTH.WRONG_PASSWORD: Wrong Password
+
+# category
+CATEGORY.IS_DEFAULT_CATEGORY: This is a default category
+
+# wallet
+WALLET.FORBIDDEN_ACCESS: Forbidden to access this wallet
+

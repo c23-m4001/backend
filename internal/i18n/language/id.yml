@@ -1,0 +1,20 @@
+# global
+CORS: 'Error Cors: Endpoint ini tidak mengizinkan request dari origin anda'
+FORBIDDEN: Forbidden
+
+INVALID_REQUEST_PAYLOAD: Request tidak valid
+INVALID_REQUEST_PAYLOAD.TYPE_ERROR: Request tidak valid (type error)
+INVALID_REQUEST_PAYLOAD.UNMARSHAL_ERROR: Request tidak valid (unmarshal error)
+
+
+# auth
+AUTH.EMAIL_REGISTERED: Email telah terdaftar
+AUTH.EMAIL_NOT_REGISTERED: Email belum terdaftar
+AUTH.WRONG_PASSWORD: Password salah
+
+# category
+CATEGORY.IS_DEFAULT_CATEGORY: Ini adalah kategori default
+
+# wallet
+WALLET.FORBIDDEN_ACCESS: Dilarang untuk mengakses dompet ini
+
