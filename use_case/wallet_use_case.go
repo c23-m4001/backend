@@ -73,7 +73,13 @@ func (u *walletUseCase) Fetch(ctx context.Context, request dto_request.WalletFet
 }
 
 func (u *walletUseCase) Get(ctx context.Context, request dto_request.WalletGetRequest) model.Wallet {
+	currentUser := model.MustGetUserCtx(ctx)
+
 	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsPath)
+
+	if wallet.UserId != currentUser.Id {
+		panic(dto_response.NewForbiddenResponse("WALLET.FORBIDDEN_ACCESS"))
+	}
 
 	return wallet
 }
@@ -83,7 +89,7 @@ func (u *walletUseCase) Update(ctx context.Context, request dto_request.WalletUp
 	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsNotPath)
 
 	if wallet.UserId != currentUser.Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden to access this wallet"))
+		panic(dto_response.NewForbiddenResponse("WALLET.FORBIDDEN_ACCESS"))
 	}
 
 	wallet.Name = request.Name
