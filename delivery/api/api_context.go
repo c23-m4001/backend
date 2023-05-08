@@ -66,14 +66,14 @@ func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
 			})
 		}
 
-		r = dto_response.NewBadRequestResponse("Invalid request payload")
+		r = dto_response.NewBadRequestResponse("INVALID REQUEST_PAYLOAD")
 		r.Errors = errs
 
 	case *json.UnmarshalTypeError:
-		r = dto_response.NewBadRequestResponse("Invalid request payload (type error)")
+		r = dto_response.NewBadRequestResponse("INVALID_REQUEST_PAYLOAD.TYPE_ERROR")
 
 	case *json.InvalidUnmarshalError:
-		r = dto_response.NewBadRequestResponse("Invalid request payload (unmarshal error)")
+		r = dto_response.NewBadRequestResponse("INVALID_REQUEST_PAYLOAD.UNMARSHAL_ERROR")
 
 	default:
 		switch v {
@@ -82,7 +82,7 @@ func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
 			bindingInternal.ErrMultiFileHeader,
 			bindingInternal.ErrMultiFileHeaderLenInvalid,
 			bindingInternal.ErrIgnoredBinding:
-			r = dto_response.NewBadRequestResponse("Invalid request payload")
+			r = dto_response.NewBadRequestResponse("INVALID REQUEST_PAYLOAD")
 
 		default:
 			panic(err)

@@ -82,7 +82,7 @@ func (u *categoryUseCase) Get(ctx context.Context, request dto_request.CategoryG
 	category := u.baseUseCase.mustGetCategory(ctx, request.CategoryId, panicIsPath)
 
 	if !category.IsGlobal && *category.UserId != model.MustGetUserCtx(ctx).Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden"))
+		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
 	return category
@@ -92,11 +92,11 @@ func (u *categoryUseCase) Update(ctx context.Context, request dto_request.Catego
 	category := u.baseUseCase.mustGetCategory(ctx, request.CategoryId, panicIsPath)
 
 	if category.IsGlobal {
-		panic(dto_response.NewBadRequestResponse("This is a default category"))
+		panic(dto_response.NewBadRequestResponse("CATEGORY.IS_DEFAULT_CATEGORY"))
 	}
 
 	if !category.IsGlobal && *category.UserId != model.MustGetUserCtx(ctx).Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden"))
+		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
 	category.Name = request.Name
@@ -113,11 +113,11 @@ func (u *categoryUseCase) Delete(ctx context.Context, request dto_request.Catego
 	category := u.baseUseCase.mustGetCategory(ctx, request.CategoryId, panicIsPath)
 
 	if category.IsGlobal {
-		panic(dto_response.NewBadRequestResponse("This is a default category"))
+		panic(dto_response.NewBadRequestResponse("CATEGORY.IS_DEFAULT_CATEGORY"))
 	}
 
 	if !category.IsGlobal && *category.UserId != model.MustGetUserCtx(ctx).Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden"))
+		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
 	// TODO: validate not used before delete

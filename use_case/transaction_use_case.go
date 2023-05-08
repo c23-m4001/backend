@@ -91,7 +91,7 @@ func (u *transactionUseCase) Get(ctx context.Context, request dto_request.Transa
 	transaction := u.baseUseCase.mustGetTransaction(ctx, request.TransactionId, panicIsPath)
 
 	if transaction.UserId != model.MustGetUserCtx(ctx).Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden"))
+		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
 	u.mustLoadTransactionData(&transaction)
@@ -103,7 +103,7 @@ func (u *transactionUseCase) Update(ctx context.Context, request dto_request.Tra
 	transaction := u.baseUseCase.mustGetTransaction(ctx, request.TransactionId, panicIsPath)
 
 	if transaction.UserId != model.MustGetUserCtx(ctx).Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden"))
+		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
 	transaction.Name = request.Name
@@ -124,7 +124,7 @@ func (u *transactionUseCase) Delete(ctx context.Context, request dto_request.Tra
 	transaction := u.baseUseCase.mustGetTransaction(ctx, request.TransactionId, panicIsPath)
 
 	if transaction.UserId != model.MustGetUserCtx(ctx).Id {
-		panic(dto_response.NewForbiddenResponse("Forbidden"))
+		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
 	// TODO: change wallet amount too
