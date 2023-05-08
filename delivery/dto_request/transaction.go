@@ -1,6 +1,8 @@
 package dto_request
 
-import "capstone/data_type"
+import (
+	"capstone/data_type"
+)
 
 type TransactionCreateRequest struct {
 	CategoryId string         `json:"category_id" validate:"required,not_empty,uuid" example:"78cfc498-7e4e-4f91-aaa7-6ada8525d68c"`
@@ -19,9 +21,12 @@ type TransactionFetchRequest struct {
 	PaginationRequest
 	Sorts TransactionFetchSorts `json:"sorts" validate:"unique=Field,dive"`
 
-	CategoryId *string `json:"category_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
-	WalletId   *string `json:"wallet_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
-	Phrase     *string `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
+	StartDate  data_type.NullDate `json:"start_date" format:"YYYY-MM-DD" example:"2006-01-02"`
+	EndDate    data_type.NullDate `json:"end_date" format:"YYYY-MM-DD" example:"2006-01-02"`
+	CategoryId *string            `json:"category_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+	WalletId   *string            `json:"wallet_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+
+	Phrase *string `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name TransactionFetchRequest
 
 type TransactionGetRequest struct {
