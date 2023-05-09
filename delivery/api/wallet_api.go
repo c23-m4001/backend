@@ -83,8 +83,8 @@ func (a *WalletApi) Fetch() gin.HandlerFunc {
 //	@tags		Wallet
 //	@Accept		json
 //	@Produce	json
-//	@Param		dto_request.WalletGetRequest	body		dto_request.WalletGetRequest	true	"Body Request"
 //	@Param		id								path		string							true	"Id"	format(uuid)
+//	@Param		dto_request.WalletGetRequest	body		dto_request.WalletGetRequest	true	"Body Request"
 //	@Success	200								{object}	dto_response.Response{data=dto_response.DataResponse{wallet=[]dto_response.WalletResponse}}
 func (a *WalletApi) Get() gin.HandlerFunc {
 	return a.Authorize(
@@ -114,8 +114,8 @@ func (a *WalletApi) Get() gin.HandlerFunc {
 //	@tags		Wallet
 //	@Accept		json
 //	@Produce	json
-//	@Param		dto_request.WalletUpdateRequest	body		dto_request.WalletUpdateRequest	true	"Body Request"
 //	@Param		id								path		string							true	"Id"	format(uuid)
+//	@Param		dto_request.WalletUpdateRequest	body		dto_request.WalletUpdateRequest	true	"Body Request"
 //	@Success	200								{object}	dto_response.Response{data=dto_response.DataResponse{wallet=[]dto_response.WalletResponse}}
 func (a *WalletApi) Update() gin.HandlerFunc {
 	return a.Authorize(
@@ -141,6 +141,33 @@ func (a *WalletApi) Update() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/wallets/{id} [delete]
+//	@Summary	Delete wallet
+//	@tags		Wallet
+//	@Accept		json
+//	@Produce	json
+//	@Param		id	path		string	true	"Id"	format(uuid)
+//	@Success	200	{object}	dto_response.SuccessResponse
+func (a *WalletApi) Delete() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			id := ctx.getUuidParam("id")
+
+			var request dto_request.WalletDeleteRequest
+			request.WalletId = id
+
+			a.walletUseCase.Delete(ctx.context(), request)
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.SuccessResponse{
+					Message: "OK",
+				},
+			)
+		},
+	)
+}
+
 func RegisterWalletApi(router gin.IRouter, useCaseManager manager.UseCaseManager) {
 	api := WalletApi{
 		api:           newApi(),
@@ -153,4 +180,5 @@ func RegisterWalletApi(router gin.IRouter, useCaseManager manager.UseCaseManager
 	routerGroup.POST("/filter", api.Fetch())
 	routerGroup.GET("/:id", api.Get())
 	routerGroup.PUT("/:id", api.Update())
+	routerGroup.DELETE("/:id", api.Delete())
 }
