@@ -19,20 +19,26 @@ type WalletUseCase interface {
 
 	// update
 	Update(ctx context.Context, request dto_request.WalletUpdateRequest) model.Wallet
+
+	// delete
+	Delete(ctx context.Context, request dto_request.WalletDeleteRequest)
 }
 
 type walletUseCase struct {
-	walletRepository repository.WalletRepository
+	compositeRepository repository.CompositeRepository
+	walletRepository    repository.WalletRepository
 
 	baseUseCase *baseUseCase
 }
 
 func NewWalletUseCase(
+	compositeRepository repository.CompositeRepository,
 	walletRepository repository.WalletRepository,
 	baseUseCase *baseUseCase,
 ) WalletUseCase {
 	return &walletUseCase{
-		walletRepository: walletRepository,
+		compositeRepository: compositeRepository,
+		walletRepository:    walletRepository,
 
 		baseUseCase: baseUseCase,
 	}
@@ -101,4 +107,14 @@ func (u *walletUseCase) Update(ctx context.Context, request dto_request.WalletUp
 	)
 
 	return wallet
+}
+
+func (u *walletUseCase) Delete(ctx context.Context, request dto_request.WalletDeleteRequest) {
+	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsPath)
+
+	u.mustValidateWalletOwnedByCurrentUser(ctx, wallet)
+
+	panicIfErr(
+		u.compositeRepository.DeleteWalletAndTransactions(ctx, &wallet),
+	)
 }
