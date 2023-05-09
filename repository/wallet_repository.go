@@ -25,6 +25,7 @@ type WalletRepository interface {
 	Update(ctx context.Context, wallet *model.Wallet) error
 
 	// delete
+	Delete(ctx context.Context, wallet *model.Wallet) error
 	Truncate(ctx context.Context) error
 }
 
@@ -160,6 +161,10 @@ func (r *walletRepository) Update(ctx context.Context, wallet *model.Wallet) err
 	}
 	columns := extractColumnsFromBaseModel(wallet, excludedColumns)
 	return defaultUpdate(r.db, ctx, wallet, columns, nil)
+}
+
+func (r *walletRepository) Delete(ctx context.Context, wallet *model.Wallet) error {
+	return defaultDestroy(r.db, ctx, wallet, nil)
 }
 
 func (r *walletRepository) Truncate(ctx context.Context) error {
