@@ -28,3 +28,7 @@ type WalletUpdateRequest struct {
 
 	WalletId string `json:"-" swaggerignore:"true"`
 } // @name WalletUpdateRequest
+
+type WalletDeleteRequest struct {
+	WalletId string `json:"-" swaggerignore:"true"`
+} // @name WalletDeleteRequest
