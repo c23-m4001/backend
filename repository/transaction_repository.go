@@ -23,6 +23,7 @@ type TransactionRepository interface {
 
 	// delete
 	Delete(ctx context.Context, transaction *model.Transaction) error
+	DeleteByWalletId(ctx context.Context, walletId string) error
 	Truncate(ctx context.Context) error
 }
 
@@ -138,6 +139,14 @@ func (r *transactionRepository) Update(ctx context.Context, transaction *model.T
 
 func (r *transactionRepository) Delete(ctx context.Context, transaction *model.Transaction) error {
 	return defaultDestroy(r.db, ctx, transaction, nil)
+}
+
+func (r *transactionRepository) DeleteByWalletId(ctx context.Context, walletId string) error {
+	whereStmt := squirrel.Eq{
+		"wallet_id": walletId,
+	}
+
+	return destroy(r.db, model.TransactionTableName, whereStmt)
 }
 
 func (r *transactionRepository) Truncate(ctx context.Context) error {
