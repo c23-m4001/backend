@@ -11,5 +11,10 @@ database:
   username: admin
   password: pass
   database_name: db
+google:
+  oauth:
+    client_id: your_google_client_id
+    client_secret: your_google_client_secret
+    redirect_uri: http://localhost:3000/auth/google-callbacks
 debug: true
 timezone: Asia/Jakarta

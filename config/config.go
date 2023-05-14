@@ -21,6 +21,16 @@ type DatabaseConfig struct {
 	DatabaseName string `yaml:"database_name"`
 }
 
+type GoogleConfig struct {
+	Oauth GoogleOauthConfig `yaml:"oauth"`
+}
+
+type GoogleOauthConfig struct {
+	ClientId     string `yaml:"client_id"`
+	ClientSecret string `yaml:"client_secret"`
+	RedirectUri  string `yaml:"redirect_uri"`
+}
+
 type YamlConfig struct {
 	timeLocation *time.Location
 	BaseDir      string
@@ -30,6 +40,7 @@ type YamlConfig struct {
 	DatabaseConfig     DatabaseConfig `yaml:"database"`
 	Environment        string         `yaml:"environment"`
 	GeoIpFileName      string         `yaml:"geo_ip_file_name"`
+	GoogleConfig       GoogleConfig   `yaml:"google"`
 	IsDebug            bool           `yaml:"debug"`
 	LogChannels        []string       `yaml:"log_channels"`
 	Port               uint           `yaml:"port"`
@@ -108,6 +119,10 @@ func GetJwtGitIgnoreFilePath() string {
 
 func GetGeoIPFilePath() string {
 	return fmt.Sprintf("%s/geoip2/%s", GetStorageDir(), GetConfig().GeoIpFileName)
+}
+
+func GetGoogleOauthConfig() GoogleOauthConfig {
+	return GetConfig().GoogleConfig.Oauth
 }
 
 func GetPostgresConfig() DatabaseConfig {

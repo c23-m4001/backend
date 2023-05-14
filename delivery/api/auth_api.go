@@ -42,6 +42,33 @@ func (a *AuthApi) EmailLogin() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/auth/google-login [post]
+//	@Summary	Google Login
+//	@tags		Auth
+//	@Accept		json
+//	@Param		dto_request.AuthGoogleLoginRequest	body	dto_request.AuthGoogleLoginRequest	true	"Body Request"
+//	@Produce	json
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{token=dto_response.AuthTokenResponse}}
+func (a *AuthApi) GoogleLogin() gin.HandlerFunc {
+	return a.Guest(
+		func(ctx apiContext) {
+			var request dto_request.AuthGoogleLoginRequest
+			ctx.mustBind(&request)
+
+			token := a.authUseCase.LoginGoogle(ctx.context(), request)
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.DataResponse{
+						"token": dto_response.NewAuthTokenResponse(token),
+					},
+				},
+			)
+		},
+	)
+}
+
 //	@Router		/auth/email-register [post]
 //	@Summary	Email Register
 //	@tags		Auth
@@ -107,6 +134,7 @@ func RegisterAuthApi(router gin.IRouter, useCaseManager manager.UseCaseManager) 
 	routerGroup := router.Group("/auth")
 
 	routerGroup.POST("/email-login", api.EmailLogin())
+	routerGroup.POST("/google-login", api.GoogleLogin())
 	routerGroup.POST("/email-register", api.EmailRegister())
 	routerGroup.POST("/login-histories", api.LoginHistory())
 }
