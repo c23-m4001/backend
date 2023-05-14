@@ -22,6 +22,9 @@ type CategoryUseCase interface {
 
 	// delete
 	Delete(ctx context.Context, request dto_request.CategoryDeleteRequest)
+
+	// option
+	OptionForTransactionForm(ctx context.Context, request dto_request.CategoryOptionForTransactionFormRequest) ([]model.Category, int)
 }
 
 type categoryUseCase struct {
@@ -65,6 +68,7 @@ func (u *categoryUseCase) Fetch(ctx context.Context, request dto_request.Categor
 	queryOption := model.CategoryQueryOption{
 		QueryOption:   model.NewBasicQueryOption(request.Limit, request.Page, model.Sorts(request.Sorts)),
 		IncludeGlobal: util.BoolP(true),
+		IsExpense:     request.IsExpense,
 		UserId:        &currentUser.Id,
 		Phrase:        request.Phrase,
 	}
@@ -125,4 +129,24 @@ func (u *categoryUseCase) Delete(ctx context.Context, request dto_request.Catego
 	panicIfErr(
 		u.categoryRepository.Delete(ctx, &category),
 	)
+}
+
+func (u *categoryUseCase) OptionForTransactionForm(ctx context.Context, request dto_request.CategoryOptionForTransactionFormRequest) ([]model.Category, int) {
+	currentUser := model.MustGetUserCtx(ctx)
+
+	queryOption := model.CategoryQueryOption{
+		QueryOption:   model.NewBasicQueryOption(request.Limit, request.Page, model.Sorts(request.Sorts)),
+		IncludeGlobal: util.BoolP(true),
+		IsExpense:     request.IsExpense,
+		UserId:        &currentUser.Id,
+		Phrase:        request.Phrase,
+	}
+
+	categories, err := u.categoryRepository.Fetch(ctx, queryOption)
+	panicIfErr(err)
+
+	total, err := u.categoryRepository.Count(ctx, queryOption)
+	panicIfErr(err)
+
+	return categories, total
 }

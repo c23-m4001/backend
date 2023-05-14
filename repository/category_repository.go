@@ -64,6 +64,10 @@ func (r *categoryRepository) prepareQuery(option model.CategoryQueryOption) squi
 	orStatements := squirrel.Or{}
 	andStatements := squirrel.And{}
 
+	if option.IsExpense != nil {
+		andStatements = append(andStatements, squirrel.Eq{"is_expense": option.IsExpense})
+	}
+
 	if option.UserId != nil {
 		andStatements = append(andStatements, squirrel.Eq{"user_id": option.UserId})
 	}

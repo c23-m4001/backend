@@ -171,6 +171,41 @@ func (a *CategoryApi) Delete() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/categories/options/transaction-form [post]
+//	@Summary	Option for Transaction Form
+//	@tags		Category
+//	@Accept		json
+//	@Produce	json
+//	@Param		dto_request.CategoryOptionForTransactionFormRequest	body		dto_request.CategoryOptionForTransactionFormRequest	true	"Body Request"
+//	@Success	200									{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.CategoryResponse}}
+func (a *CategoryApi) OptionForTransactionForm() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			var request dto_request.CategoryOptionForTransactionFormRequest
+			ctx.mustBind(&request)
+
+			categories, total := a.categoryUseCase.OptionForTransactionForm(ctx.context(), request)
+
+			nodes := []dto_response.CategoryResponse{}
+			for _, category := range categories {
+				nodes = append(nodes, dto_response.NewCategoryResponse(category))
+			}
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.PaginationResponse{
+						Limit: request.Limit,
+						Page:  request.Page,
+						Nodes: nodes,
+						Total: total,
+					},
+				},
+			)
+		},
+	)
+}
+
 func RegisterCategoryApi(router gin.IRouter, useCaseManager manager.UseCaseManager) {
 	api := CategoryApi{
 		api:             newApi(),
@@ -184,4 +219,7 @@ func RegisterCategoryApi(router gin.IRouter, useCaseManager manager.UseCaseManag
 	routerGroup.GET("/:id", api.Get())
 	routerGroup.PUT("/:id", api.Update())
 	routerGroup.DELETE("/:id", api.Delete())
+
+	optionRouterGroup := routerGroup.Group("/options")
+	optionRouterGroup.POST("/transaction-form", api.OptionForTransactionForm())
 }
