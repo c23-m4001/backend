@@ -26,10 +26,10 @@ func NewAuthTokenResponseP(token model.Token) *AuthTokenResponse {
 }
 
 type LoginHistoryResponse struct {
-	Id           string
-	IpAddress    string
-	LocationName string
-	Time         data_type.DateTime
+	Id           string             `json:"id" example:"284c93cb-1fed-4891-b5b8-032feb7c86da"`
+	IpAddress    string             `json:"ip_address" example:"127.0.0.1"`
+	LocationName string             `json:"location_name" example:"Medan North Sumatera"`
+	Time         data_type.DateTime `json:"time" example:"2023-0514T14:33:26+07:00"`
 } // @name LoginHistoryResponse
 
 func NewLoginHistoryResponse(userAccessToken model.UserAccessToken) LoginHistoryResponse {
