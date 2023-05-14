@@ -66,7 +66,7 @@ func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
 			})
 		}
 
-		r = dto_response.NewBadRequestResponse("INVALID REQUEST_PAYLOAD")
+		r = dto_response.NewBadRequestResponse("INVALID_REQUEST_PAYLOAD")
 		r.Errors = errs
 
 	case *json.UnmarshalTypeError:
@@ -82,7 +82,7 @@ func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
 			bindingInternal.ErrMultiFileHeader,
 			bindingInternal.ErrMultiFileHeaderLenInvalid,
 			bindingInternal.ErrIgnoredBinding:
-			r = dto_response.NewBadRequestResponse("INVALID REQUEST_PAYLOAD")
+			r = dto_response.NewBadRequestResponse("INVALID_REQUEST_PAYLOAD")
 
 		default:
 			panic(err)
