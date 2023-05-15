@@ -32,3 +32,14 @@ type WalletUpdateRequest struct {
 type WalletDeleteRequest struct {
 	WalletId string `json:"-" swaggerignore:"true"`
 } // @name WalletDeleteRequest
+
+type WalletOptionForTransactionFormSorts []struct {
+	Field     string `json:"field" validate:"required,oneof=name" example:"name"`
+	Direction string `json:"direction" validate:"required,oneof=asc desc" example:"asc"`
+} // @name WalletOptionForTransactionFormSorts
+
+type WalletOptionForTransactionFormRequest struct {
+	PaginationRequest
+	Sorts  WalletOptionForTransactionFormSorts `json:"sorts" validate:"unique=Field,dive"`
+	Phrase *string                             `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
+} // @name WalletOptionForTransactionFormRequest

@@ -22,6 +22,9 @@ type WalletUseCase interface {
 
 	// delete
 	Delete(ctx context.Context, request dto_request.WalletDeleteRequest)
+
+	// option
+	OptionForTransactionForm(ctx context.Context, request dto_request.WalletOptionForTransactionFormRequest) ([]model.Wallet, int)
 }
 
 type walletUseCase struct {
@@ -117,4 +120,20 @@ func (u *walletUseCase) Delete(ctx context.Context, request dto_request.WalletDe
 	panicIfErr(
 		u.compositeRepository.DeleteWalletAndTransactions(ctx, &wallet),
 	)
+}
+
+func (u *walletUseCase) OptionForTransactionForm(ctx context.Context, request dto_request.WalletOptionForTransactionFormRequest) ([]model.Wallet, int) {
+	queryOption := model.WalletQueryOption{
+		QueryOption: model.NewBasicQueryOption(request.Limit, request.Page, model.Sorts(request.Sorts)),
+		Phrase:      request.Phrase,
+		UserId:      util.StringP(model.MustGetUserCtx(ctx).Id),
+	}
+
+	wallets, err := u.walletRepository.Fetch(ctx, queryOption)
+	panicIfErr(err)
+
+	total, err := u.walletRepository.Count(ctx, queryOption)
+	panicIfErr(err)
+
+	return wallets, total
 }
