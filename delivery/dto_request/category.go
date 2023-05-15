@@ -32,9 +32,14 @@ type CategoryDeleteRequest struct {
 	CategoryId string `json:"-" swaggerignore:"true"`
 } // @name CategoryDeleteRequest
 
+type CategoryOptionForTransactionFormSorts []struct {
+	Field     string `json:"field" validate:"required,oneof=name" example:"name"`
+	Direction string `json:"direction" validate:"required,oneof=asc desc" example:"asc"`
+} // @name CategoryOptionForTransactionFormSorts
+
 type CategoryOptionForTransactionFormRequest struct {
 	PaginationRequest
-	Sorts     CategoryFetchSorts `json:"sorts" validate:"unique=Field,dive"`
-	IsExpense *bool              `json:"is_expense"`
-	Phrase    *string            `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
+	Sorts     CategoryOptionForTransactionFormSorts `json:"sorts" validate:"unique=Field,dive"`
+	IsExpense *bool                                 `json:"is_expense"`
+	Phrase    *string                               `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name CategoryOptionForTransactionFormRequest
