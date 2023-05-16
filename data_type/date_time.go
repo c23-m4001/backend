@@ -58,6 +58,10 @@ func (dt *DateTime) parse(layout string, s string) {
 	}
 }
 
+func (dt DateTime) Add(d time.Duration) DateTime {
+	return NewDateTime(dt.Time().Add(d))
+}
+
 // implement Stringer interface
 func (dt DateTime) String() string {
 	s := "0000-00-00T00:00:00Z"

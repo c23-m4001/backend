@@ -44,11 +44,11 @@ func (dt *NullDateTime) parse(s *string) {
 	dt.set(&dateTime)
 }
 
-func (dt *NullDateTime) IsNil() bool {
+func (dt NullDateTime) IsNil() bool {
 	return dt.get() == nil
 }
 
-func (dt *NullDateTime) DateTime() DateTime {
+func (dt NullDateTime) DateTime() DateTime {
 	dateTime := dt.get()
 	if dateTime == nil {
 		return DateTime{}
@@ -56,8 +56,17 @@ func (dt *NullDateTime) DateTime() DateTime {
 	return *dateTime
 }
 
-func (dt *NullDateTime) DateTimeP() *DateTime {
+func (dt NullDateTime) DateTimeP() *DateTime {
 	return dt.get()
+}
+
+func (dt NullDateTime) Add(duration time.Duration) NullDateTime {
+	dateTime := dt.get()
+	if dateTime != nil {
+		*dateTime = dateTime.Add(duration)
+	}
+
+	return NewNullDateTime(dateTime)
 }
 
 // implement Stringer interface
