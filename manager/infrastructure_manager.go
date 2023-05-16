@@ -12,6 +12,7 @@ import (
 )
 
 type InfrastructureManager interface {
+	Close() error
 	GetDB() *sqlx.DB
 	MigrateDB(isRollback bool, steps int) error
 	RefreshDB() error
@@ -19,6 +20,13 @@ type InfrastructureManager interface {
 
 type infrastructureManager struct {
 	sqlDB *sqlx.DB
+}
+
+func (i infrastructureManager) Close() error {
+	if sqlDB := i.GetDB(); i.sqlDB != nil {
+		return sqlDB.Close()
+	}
+	return nil
 }
 
 func (m infrastructureManager) GetDB() *sqlx.DB {
