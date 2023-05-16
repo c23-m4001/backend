@@ -21,5 +21,5 @@ seed:
 seed-production:
 	go run -tags tools . seed --production $(name)
 
-
-
+generate-docs:
+	go run capstone/tool/swag fmt -d main.go,./delivery/api && go run capstone/tool/swag init -d ./,./delivery/api --outputTypes json,yaml
