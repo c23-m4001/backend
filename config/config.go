@@ -118,3 +118,11 @@ func IsDebug() bool {
 func IsProduction() bool {
 	return !GetConfig().IsDebug
 }
+
+func DisableDebug() {
+	config.IsDebug = false
+}
+
+func EnableDebug() {
+	config.IsDebug = true
+}
