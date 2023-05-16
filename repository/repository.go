@@ -165,7 +165,7 @@ func count(db infrastructure.DBTX, dest interface{}, stmt squirrel.Sqlizer) (int
 	return count, nil
 }
 
-func isExist(db infrastructure.DBTX, dest interface{}, stmt squirrel.Sqlizer) (bool, error) {
+func isExist(db infrastructure.DBTX, stmt squirrel.Sqlizer) (bool, error) {
 	query, args, err := stmt.ToSql()
 	if err != nil {
 		return false, translateSqlError(err)
