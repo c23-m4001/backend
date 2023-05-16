@@ -101,3 +101,7 @@ func GetJwtPublicKeyFilePath() string {
 func GetJwtGitIgnoreFilePath() string {
 	return fmt.Sprintf("%s/jwt/.gitignore", GetStorageDir())
 }
+
+func GetTimeLocation() *time.Location {
+	return GetConfig().timeLocation
+}
