@@ -2,6 +2,7 @@ package model
 
 import (
 	"capstone/constant"
+	"capstone/data_type"
 	"capstone/util"
 	"fmt"
 	"strings"
@@ -9,6 +10,40 @@ import (
 	"github.com/Masterminds/squirrel"
 )
 
+// for base repository model
+type BaseModel interface {
+	TableName() string
+	TableIds() []string
+	ToMap() map[string]interface{}
+	GetCreatedAt() data_type.NullDateTime
+	GetUpdatedAt() data_type.NullDateTime
+	SetCreatedAt(dateTime data_type.NullDateTime)
+	SetUpdatedAt(dateTime data_type.NullDateTime)
+}
+
+// created_at updated_at implementions for every table
+type Timestamp struct {
+	CreatedAt data_type.NullDateTime `db:"created_at"`
+	UpdatedAt data_type.NullDateTime `db:"updated_at"`
+}
+
+func (m Timestamp) GetCreatedAt() data_type.NullDateTime {
+	return m.CreatedAt
+}
+
+func (m Timestamp) GetUpdatedAt() data_type.NullDateTime {
+	return m.UpdatedAt
+}
+
+func (m *Timestamp) SetCreatedAt(dateTime data_type.NullDateTime) {
+	m.CreatedAt = dateTime
+}
+
+func (m *Timestamp) SetUpdatedAt(dateTime data_type.NullDateTime) {
+	m.UpdatedAt = dateTime
+}
+
+// for pagination
 type QueryOption struct {
 	SelectOption
 	PaginationOption
