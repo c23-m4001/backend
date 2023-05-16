@@ -2,7 +2,15 @@
 
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"capstone/util"
+	"fmt"
+	"io/ioutil"
+
+	"github.com/spf13/cobra"
+)
+
+const migrationFilePath string = "database/migration"
 
 const migrationFileContentTemplate = `package migration
 
@@ -29,6 +37,14 @@ func migrationFileGen() *cobra.Command {
 		Short: "Generate migration file",
 		Long:  "Generate migration file",
 		Run: func(cmd *cobra.Command, args []string) {
+			var (
+				version           = util.CurrentDateTime().Format("20060102150405")
+				migrationFilePath = migrationFilePath + "/" + fmt.Sprintf("%s_%s.go", version, filename)
+			)
+
+			if err := ioutil.WriteFile(migrationFilePath, []byte(fmt.Sprintf(migrationFileContentTemplate, version)), 0644); err != nil {
+				panic(err)
+			}
 		},
 	}
 
