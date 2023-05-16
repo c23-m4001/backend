@@ -30,6 +30,7 @@ type YamlConfig struct {
 	DatabaseConfig     DatabaseConfig `yaml:"database"`
 	Environment        string         `yaml:"environment"`
 	IsDebug            bool           `yaml:"debug"`
+	Port               uint           `yaml:"port"`
 	Timezone           string         `yaml:"timezone"`
 }
 
