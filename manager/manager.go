@@ -20,6 +20,14 @@ type Container struct {
 	useCaseManager        UseCaseManager
 }
 
+func (m *Container) InfrastructureManager() InfrastructureManager {
+	return m.infrastructureManager
+}
+
+func (m *Container) RepositoryManager() RepositoryManager {
+	return m.repositoryManager
+}
+
 func (m *Container) UseCaseManager() UseCaseManager {
 	return m.useCaseManager
 }
