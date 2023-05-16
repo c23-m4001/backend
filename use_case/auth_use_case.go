@@ -56,10 +56,10 @@ func (u *authUseCase) generateJwt(ctx context.Context, userId string) (*jwtInter
 		UserId:       userId,
 		Revoked:      false,
 		ExpiredAt:    expiredAt,
-		IpAddress:    "",
-		Longitude:    0,
-		Latitude:     0,
-		LocationName: "",
+		IpAddress:    nil,
+		Longitude:    nil,
+		Latitude:     nil,
+		LocationName: nil,
 		Timestamp:    model.Timestamp{},
 	}
 
