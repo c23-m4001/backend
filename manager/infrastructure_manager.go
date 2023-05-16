@@ -1,6 +1,15 @@
 package manager
 
-import "github.com/jmoiron/sqlx"
+import (
+	"capstone/config"
+	"capstone/infrastructure"
+
+	"github.com/jmoiron/sqlx"
+)
+
+type InfrastructureManager interface {
+	GetDB() *sqlx.DB
+}
 
 type infrastructureManager struct {
 	sqlDB *sqlx.DB
@@ -8,4 +17,10 @@ type infrastructureManager struct {
 
 func (m infrastructureManager) GetDB() *sqlx.DB {
 	return m.sqlDB
+}
+
+func newInfrastructureManager() InfrastructureManager {
+	return &infrastructureManager{
+		sqlDB: infrastructure.NewPostgreSqlDB(config.GetPostgresConfig()),
+	}
 }

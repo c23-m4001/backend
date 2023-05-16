@@ -14,7 +14,7 @@ func (m *repositoryManager) UserRepository() repository.UserRepository {
 	return m.userRepository
 }
 
-func NewRepositoryManager(infrastructureManager *infrastructureManager) RepositoryManager {
+func newRepositoryManager(infrastructureManager InfrastructureManager) RepositoryManager {
 	db := infrastructureManager.GetDB()
 	return &repositoryManager{
 		userRepository: repository.NewUserRepository(db),
