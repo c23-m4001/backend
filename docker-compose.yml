@@ -1,0 +1,39 @@
+version: '3.5'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      PGDATA: /data/postgres
+    container_name: dicoding_postgres_container
+    ports:
+      - 5432:5432
+    volumes:
+      - dicoding_postgres:/data/postgres
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+    container_name: dicoding_pgadmin_container
+    ports:
+      - 127.0.0.1:5050:80
+    volumes:
+      - dicoding_pgadmin:/var/lib/pgadmin
+
+  redoc:
+    image: redocly/redoc:latest
+    environment:
+      SPEC_URL: swagger/swagger.json
+    container_name: dicoding_redoc_container
+    ports:
+      - 4040:80
+    volumes: 
+      - ./docs/:/usr/share/nginx/html/swagger/
+
+volumes:
+  dicoding_postgres:
+  dicoding_pgadmin:
