@@ -39,9 +39,18 @@ func NewPostgreSqlDB(dbConfig config.DatabaseConfig) *sqlx.DB {
 		conf.LogLevel = pgxLoggerConfig.LogLevel
 	}
 
+	pgConnConf := &conf.Config
+	pgConnConf.Host = dbConfig.Host
+	pgConnConf.Port = dbConfig.Port
+	pgConnConf.Database = dbConfig.DatabaseName
+	pgConnConf.User = dbConfig.Username
+	pgConnConf.Password = dbConfig.Password
+	pgConnConf.RuntimeParams["timezone"] = "UTC"
+
 	pgxDB := stdlib.OpenDB(*conf)
 	if err = pgxDB.Ping(); err != nil {
 		pgxDB.Close()
+		panic(err)
 	}
 
 	db := sqlx.NewDb(pgxDB, "pgx")
