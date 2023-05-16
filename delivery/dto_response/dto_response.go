@@ -81,3 +81,16 @@ func NewNotFoundResponseP(message string) *ErrorResponse {
 	r := NewNotFoundResponse(message)
 	return &r
 }
+
+func NewInternalServerErrorResponse() ErrorResponse {
+	return ErrorResponse{
+		Code:    http.StatusInternalServerError,
+		Message: "Internal server error",
+		Errors:  []Error{},
+	}
+}
+
+func NewInternalServerErrorResponseP() *ErrorResponse {
+	r := NewInternalServerErrorResponse()
+	return &r
+}
