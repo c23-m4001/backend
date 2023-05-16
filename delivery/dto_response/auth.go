@@ -46,3 +46,35 @@ func NewLoginHistoryResponseP(userAccessToken model.UserAccessToken) *LoginHisto
 	r := NewLoginHistoryResponse(userAccessToken)
 	return &r
 }
+
+type GoogleLoginUserDataResponse struct {
+	Name  string `json:"name" example:"John Doe"`
+	Email string `json:"email" example:"johndoe@gmail.com"`
+}
+
+type GoogleLoginResponse struct {
+	UserData *GoogleLoginUserDataResponse `json:"user_data" extensions:"x-nullable"`
+	Token    *AuthTokenResponse           `json:"token" extensions:"x-nullable"`
+} // @name GoogleLoginResponse
+
+func NewGoogleLoginResponse(googleLoginData model.GoogleLoginData) GoogleLoginResponse {
+	r := GoogleLoginResponse{}
+
+	if googleLoginData.UserData != nil {
+		r.UserData = &GoogleLoginUserDataResponse{
+			Name:  googleLoginData.UserData.Name,
+			Email: googleLoginData.UserData.Email,
+		}
+	}
+
+	if googleLoginData.Token != nil {
+		r.Token = NewAuthTokenResponseP(*googleLoginData.Token)
+	}
+
+	return r
+}
+
+func NewGoogleLoginResponseP(googleLoginData model.GoogleLoginData) *GoogleLoginResponse {
+	r := NewGoogleLoginResponse(googleLoginData)
+	return &r
+}

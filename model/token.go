@@ -7,3 +7,13 @@ type Token struct {
 	AccessTokenExpiredAt data_type.DateTime
 	TokenType            string
 }
+
+type UserData struct {
+	Name  string
+	Email string
+}
+
+type GoogleLoginData struct {
+	UserData *UserData
+	Token    *Token
+}
