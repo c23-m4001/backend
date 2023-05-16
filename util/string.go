@@ -33,3 +33,12 @@ func ToString(value interface{}) string {
 	}
 	return ""
 }
+
+func StringInSlice(s string, list []string) bool {
+	for _, l := range list {
+		if l == s {
+			return true
+		}
+	}
+	return false
+}
