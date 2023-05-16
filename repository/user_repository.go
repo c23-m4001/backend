@@ -15,6 +15,7 @@ type UserRepository interface {
 
 	// read
 	Get(ctx context.Context, id string) (*model.User, error)
+	GetByEmail(ctx context.Context, email string) (*model.User, error)
 
 	// delete
 	Truncate(ctx context.Context) error
@@ -57,6 +58,14 @@ func (r *userRepository) Get(ctx context.Context, id string) (*model.User, error
 	stmt := stmtBuilder.Select("*").
 		From(model.UserTableName).
 		Where(squirrel.Eq{"id": id})
+
+	return r.get(stmt)
+}
+
+func (r *userRepository) GetByEmail(ctx context.Context, email string) (*model.User, error) {
+	stmt := stmtBuilder.Select("*").
+		From(model.UserTableName).
+		Where(squirrel.ILike{"email": email})
 
 	return r.get(stmt)
 }
