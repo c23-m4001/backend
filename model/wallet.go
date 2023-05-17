@@ -38,6 +38,7 @@ func (m Wallet) ToMap() map[string]interface{} {
 type WalletQueryOption struct {
 	QueryOption
 	Phrase *string
+	UserId *string
 }
 
 func (o *WalletQueryOption) SetDefault() {

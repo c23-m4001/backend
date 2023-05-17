@@ -62,6 +62,10 @@ func (r *walletRepository) prepareQuery(option model.WalletQueryOption) squirrel
 	stmt := stmtBuilder.Select().
 		From(fmt.Sprintf("%s w", model.WalletTableName))
 
+	if option.UserId != nil {
+		stmt = stmt.Where(squirrel.Eq{"user_id": option.UserId})
+	}
+
 	if option.Phrase != nil {
 		phrase := "%" + *option.Phrase + "%"
 		stmt = stmt.Where(squirrel.ILike{"name": phrase})
