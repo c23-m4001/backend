@@ -2,6 +2,9 @@ environment: development
 port: 8080
 cors_allowed_origins:
   - "*"
+log_channels:
+  - "stdout"
+geo_ip_file_name: GeoLite2-City.mmdb
 database:
   host: postgres
   port: 5432

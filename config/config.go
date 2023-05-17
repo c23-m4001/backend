@@ -29,7 +29,9 @@ type YamlConfig struct {
 	CorsAllowedOrigins []string       `yaml:"cors_allowed_origins"`
 	DatabaseConfig     DatabaseConfig `yaml:"database"`
 	Environment        string         `yaml:"environment"`
+	GeoIpFileName      string         `yaml:"geo_ip_file_name"`
 	IsDebug            bool           `yaml:"debug"`
+	LogChannels        []string       `yaml:"log_channels"`
 	Port               uint           `yaml:"port"`
 	Timezone           string         `yaml:"timezone"`
 }
@@ -104,8 +106,16 @@ func GetJwtGitIgnoreFilePath() string {
 	return fmt.Sprintf("%s/jwt/.gitignore", GetStorageDir())
 }
 
+func GetGeoIPFilePath() string {
+	return fmt.Sprintf("%s/geoip2/%s", GetStorageDir(), GetConfig().GeoIpFileName)
+}
+
 func GetPostgresConfig() DatabaseConfig {
 	return GetConfig().DatabaseConfig
+}
+
+func GetLogChannels() []string {
+	return GetConfig().LogChannels
 }
 
 func GetTimeLocation() *time.Location {
