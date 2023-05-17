@@ -2,6 +2,7 @@ package manager
 
 import (
 	"capstone/config"
+	geoIpInternal "capstone/internal/geoip"
 	jwtInternal "capstone/internal/jwt"
 )
 
@@ -15,9 +16,11 @@ type Container struct {
 	managerConfig ManagerConfig
 
 	infrastructureManager InfrastructureManager
-	jwt                   jwtInternal.Jwt
 	repositoryManager     RepositoryManager
 	useCaseManager        UseCaseManager
+
+	geoIp geoIpInternal.GeoIp
+	jwt   jwtInternal.Jwt
 }
 
 func (m Container) InfrastructureManager() InfrastructureManager {
@@ -43,6 +46,7 @@ func NewContainer(managerConfig ManagerConfig) *Container {
 	container.infrastructureManager = newInfrastructureManager()
 	container.repositoryManager = newRepositoryManager(container.infrastructureManager)
 
+	container.geoIp = geoIpInternal.NewGeoIp(config.GetGeoIPFilePath())
 	container.jwt = jwtInternal.NewJwt(
 		config.GetJwtPrivateKeyFilePath(),
 		config.GetJwtPublicKeyFilePath(),
@@ -51,6 +55,7 @@ func NewContainer(managerConfig ManagerConfig) *Container {
 	container.useCaseManager = newUseCaseManager(
 		container.infrastructureManager,
 		container.repositoryManager,
+		container.geoIp,
 		container.jwt,
 	)
 
