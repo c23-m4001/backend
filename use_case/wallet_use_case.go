@@ -10,8 +10,14 @@ import (
 )
 
 type WalletUseCase interface {
+	// create
 	Create(ctx context.Context, request dto_request.WalletCreateRequest) model.Wallet
+
+	// read
 	Fetch(ctx context.Context, request dto_request.WalletFetchRequest) ([]model.Wallet, int)
+	Get(ctx context.Context, request dto_request.WalletGetRequest) model.Wallet
+
+	// update
 	Update(ctx context.Context, request dto_request.WalletUpdateRequest) model.Wallet
 }
 
@@ -63,6 +69,12 @@ func (u *walletUseCase) Fetch(ctx context.Context, request dto_request.WalletFet
 	panicIfErr(err)
 
 	return wallets, total
+}
+
+func (u *walletUseCase) Get(ctx context.Context, request dto_request.WalletGetRequest) model.Wallet {
+	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsPath)
+
+	return wallet
 }
 
 func (u *walletUseCase) Update(ctx context.Context, request dto_request.WalletUpdateRequest) model.Wallet {
