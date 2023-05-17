@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"time"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type NullDateTime struct {
@@ -14,6 +16,10 @@ type NullDateTime struct {
 
 func (dt NullDateTime) layout() string {
 	return dt.dateTime.layout()
+}
+
+func (dt NullDateTime) IsoLayout() string {
+	return "YYYY-MM-DDThh:mm:ssZ"
 }
 
 func (dt NullDateTime) get() *DateTime {
@@ -137,4 +143,12 @@ func NewNullDateTime(v *DateTime) NullDateTime {
 	dateTime.set(v)
 
 	return dateTime
+}
+
+func NullDateTimeValidationFn(sl validator.StructLevel) {
+	nullDateTime := sl.Current().Interface().(NullDateTime)
+	dateTime := nullDateTime.DateTimeP()
+	if dateTime != nil && !dateTime.IsValid() {
+		sl.ReportError(nullDateTime, "", "", "data_type_null_date_time", "")
+	}
 }
