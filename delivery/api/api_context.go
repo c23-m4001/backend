@@ -28,10 +28,6 @@ func (a *apiContext) context() context.Context {
 	return a.ginCtx.Request.Context()
 }
 
-func (a *apiContext) getClientIp() string {
-	return a.ginCtx.ClientIP()
-}
-
 func (a *apiContext) getParam(key string) string {
 	return a.ginCtx.Param(key)
 }
