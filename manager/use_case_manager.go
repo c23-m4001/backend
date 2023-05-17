@@ -8,14 +8,20 @@ import (
 
 type UseCaseManager interface {
 	AuthUseCase() use_case.AuthUseCase
+	UserUseCase() use_case.UserUseCase
 }
 
 type useCaseManager struct {
 	authUseCase use_case.AuthUseCase
+	userUseCase use_case.UserUseCase
 }
 
 func (m *useCaseManager) AuthUseCase() use_case.AuthUseCase {
 	return m.authUseCase
+}
+
+func (m *useCaseManager) UserUseCase() use_case.UserUseCase {
+	return m.userUseCase
 }
 
 func newUseCaseManager(
@@ -30,6 +36,9 @@ func newUseCaseManager(
 			repositoryManager.UserRepository(),
 			geoIp,
 			jwt,
+		),
+		userUseCase: use_case.NewUserUseCase(
+			repositoryManager.UserRepository(),
 		),
 	}
 }
