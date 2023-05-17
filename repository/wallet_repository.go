@@ -4,6 +4,7 @@ import (
 	"capstone/infrastructure"
 	"capstone/model"
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -14,9 +15,14 @@ type WalletRepository interface {
 	InsertMany(ctx context.Context, wallets []model.Wallet) error
 
 	// read
+	Count(ctx context.Context, options ...model.WalletQueryOption) (int, error)
+	Fetch(ctx context.Context, options ...model.WalletQueryOption) ([]model.Wallet, error)
 	FetchByUserId(ctx context.Context, userId string) ([]model.Wallet, error)
 	Get(ctx context.Context, id string) (*model.Wallet, error)
 	GetSumTotalAmountByUserId(ctx context.Context, userId string) (float64, error)
+
+	// update
+	Update(ctx context.Context, wallet *model.Wallet) error
 
 	// delete
 	Truncate(ctx context.Context) error
@@ -52,6 +58,20 @@ func (r *walletRepository) get(stmt squirrel.Sqlizer) (*model.Wallet, error) {
 	return &wallet, nil
 }
 
+func (r *walletRepository) prepareQuery(option model.WalletQueryOption) squirrel.SelectBuilder {
+	stmt := stmtBuilder.Select().
+		From(fmt.Sprintf("%s w", model.WalletTableName))
+
+	if option.Phrase != nil {
+		phrase := "%" + *option.Phrase + "%"
+		stmt = stmt.Where(squirrel.ILike{"name": phrase})
+	}
+
+	stmt = option.Prepare(stmt)
+
+	return stmt
+}
+
 func (r *walletRepository) Insert(ctx context.Context, wallet *model.Wallet) error {
 	return defaultInsert(r.db, ctx, wallet, "*")
 }
@@ -62,6 +82,31 @@ func (r *walletRepository) InsertMany(ctx context.Context, wallets []model.Walle
 		arr = append(arr, &wallets[i])
 	}
 	return defaultInsertMany(r.db, ctx, arr, "*")
+}
+
+func (r *walletRepository) Count(ctx context.Context, options ...model.WalletQueryOption) (int, error) {
+	option := model.WalletQueryOption{}
+	if len(options) > 0 {
+		option = options[0]
+	}
+	option.SetDefault()
+	option.IsCount = true
+
+	stmt := r.prepareQuery(option)
+
+	return count(r.db, stmt)
+}
+
+func (r *walletRepository) Fetch(ctx context.Context, options ...model.WalletQueryOption) ([]model.Wallet, error) {
+	option := model.WalletQueryOption{}
+	if len(options) > 0 {
+		option = options[0]
+	}
+	option.SetDefault()
+
+	stmt := r.prepareQuery(option)
+
+	return r.fetch(stmt)
 }
 
 func (r *walletRepository) FetchByUserId(ctx context.Context, userId string) ([]model.Wallet, error) {
@@ -91,6 +136,15 @@ func (r *walletRepository) GetSumTotalAmountByUserId(ctx context.Context, userId
 	}
 
 	return sumTotal, nil
+}
+
+func (r *walletRepository) Update(ctx context.Context, wallet *model.Wallet) error {
+	excludedColumns := []string{
+		"total_amount",
+		"user_id",
+	}
+	columns := extractColumnsFromBaseModel(wallet, excludedColumns)
+	return defaultUpdate(r.db, ctx, wallet, columns, nil)
 }
 
 func (r *walletRepository) Truncate(ctx context.Context) error {
