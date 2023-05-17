@@ -1,6 +1,9 @@
 package dto_response
 
-import "net/http"
+import (
+	"capstone/data_type"
+	"net/http"
+)
 
 type Response struct {
 	Data interface{} `json:"data"`
@@ -29,6 +32,11 @@ type PaginationResponse struct {
 	Limit *int        `json:"limit" example:"10"`
 	Nodes interface{} `json:"nodes"`
 } // @name PaginationResponse
+
+type Timestamp struct {
+	CreatedAt data_type.NullDateTime `json:"created_at" format:"YYYY-MM-DDTHH:mm:ssZ" example:"2023-01-01T07:00:00+07:00" extensions:"x-nullable"`
+	UpdatedAt data_type.NullDateTime `json:"updated_at" format:"YYYY-MM-DDTHH:mm:ssZ" example:"2023-01-01T07:00:00+07:00" extensions:"x-nullable"`
+}
 
 func NewBadRequestResponse(message string) ErrorResponse {
 	return ErrorResponse{
