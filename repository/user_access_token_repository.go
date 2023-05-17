@@ -26,7 +26,9 @@ type userAccessTokenRepository struct {
 }
 
 func NewUserAccessTokenRepository(db infrastructure.DBTX) UserAccessTokenRepository {
-	return &userAccessTokenRepository{}
+	return &userAccessTokenRepository{
+		db: db,
+	}
 }
 
 func (r *userAccessTokenRepository) get(stmt squirrel.SelectBuilder) (*model.UserAccessToken, error) {
