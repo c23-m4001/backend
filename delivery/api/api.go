@@ -38,8 +38,10 @@ func newApi() api {
 
 func registerMiddlewares(router gin.IRouter, container *manager.Container) {
 	useCaseManager := container.UseCaseManager()
+	loggerStack := container.InfrastructureManager().GetLoggerStack()
 
-	middleware.PanicHandler(router)
+	middleware.PanicHandler(router, loggerStack)
+	middleware.IpHandler(router)
 	middleware.JWTHandler(router, useCaseManager.AuthUseCase())
 }
 
