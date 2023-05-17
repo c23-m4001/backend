@@ -13,13 +13,24 @@ import (
 
 type InfrastructureManager interface {
 	Close() error
+
 	GetDB() *sqlx.DB
 	MigrateDB(isRollback bool, steps int) error
 	RefreshDB() error
+
+	GetLoggerStack() infrastructure.LoggerStack
 }
 
 type infrastructureManager struct {
-	sqlDB *sqlx.DB
+	loggerStack infrastructure.LoggerStack
+	sqlDB       *sqlx.DB
+}
+
+func newInfrastructureManager() InfrastructureManager {
+	return &infrastructureManager{
+		sqlDB:       infrastructure.NewPostgreSqlDB(config.GetPostgresConfig()),
+		loggerStack: infrastructure.NewLoggerStack(config.GetLogChannels()),
+	}
 }
 
 func (i infrastructureManager) Close() error {
@@ -117,8 +128,6 @@ func (m infrastructureManager) dropDB() error {
 	return sqlDB.Close()
 }
 
-func newInfrastructureManager() InfrastructureManager {
-	return &infrastructureManager{
-		sqlDB: infrastructure.NewPostgreSqlDB(config.GetPostgresConfig()),
-	}
+func (m infrastructureManager) GetLoggerStack() infrastructure.LoggerStack {
+	return m.loggerStack
 }
