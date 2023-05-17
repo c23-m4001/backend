@@ -11,6 +11,12 @@ COPY . .
 RUN go build -tags tools -o /project/capstone/build/capstone-tools .
 
 FROM alpine:latest
+
+# to fix timezone not loaded
+RUN apk add --no-cache tzdata
+
 COPY --from=builder /project/capstone/build/capstone-tools /project/capstone/build/capstone-tools
+
+WORKDIR /project/capstone/build/
 
 ENTRYPOINT [ "sleep", "infinity" ]
