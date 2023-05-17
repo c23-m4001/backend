@@ -50,7 +50,7 @@ func NewPostgreSqlDB(dbConfig config.DatabaseConfig) *sqlx.DB {
 	pgxDB := stdlib.OpenDB(*conf)
 	if err = pgxDB.Ping(); err != nil {
 		pgxDB.Close()
-		panic(err)
+		// panic(err)
 	}
 
 	db := sqlx.NewDb(pgxDB, "pgx")
