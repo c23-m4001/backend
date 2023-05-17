@@ -4,7 +4,7 @@ import "capstone/data_type"
 
 const WalletTableName = "wallets"
 
-var _ BaseModel = &Wallet{}
+var wallet BaseModel = &Wallet{}
 
 type Wallet struct {
 	Id          string                   `db:"id"`
@@ -33,4 +33,25 @@ func (m Wallet) ToMap() map[string]interface{} {
 		"created_at":   m.CreatedAt,
 		"updated_at":   m.UpdatedAt,
 	}
+}
+
+type WalletQueryOption struct {
+	QueryOption
+	Phrase *string
+}
+
+func (o *WalletQueryOption) SetDefault() {
+	if len(o.Fields) == 0 {
+		o.Fields = []string{"*"}
+	}
+
+	o.QueryOption.SetDefault()
+
+	if len(o.Sorts) == 0 {
+		o.Sorts = Sorts{
+			{Field: "name", Direction: "asc"},
+		}
+	}
+
+	o.translateSorts(wallet, o.translateSort)
 }
