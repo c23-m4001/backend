@@ -1,3 +1,6 @@
+http:
+	go run -tags http . http
+
 # e.g. make jwt-key-gen flag="--force"
 jwt-key-gen:
 	go run -tags tools . jwt-key-gen $(flag)
