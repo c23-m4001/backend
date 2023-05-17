@@ -2,13 +2,15 @@ package api
 
 import (
 	"capstone/delivery/dto_response"
+	bindingInternal "capstone/internal/gin/binding"
+	"capstone/internal/gin/validator"
+	"capstone/model"
 	"capstone/util"
 	"context"
 	"encoding/json"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	"github.com/gin-gonic/gin/binding"
 	"github.com/iancoleman/strcase"
 )
 
@@ -58,6 +60,19 @@ func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
 	var r dto_response.ErrorResponse
 
 	switch v := err.(type) {
+	case validator.ValidationErrors:
+		errs := []dto_response.Error{}
+		translations := v.Translate(model.MustGetValidatorTranslatorCtx(a.context()))
+		for k, translation := range translations {
+			errs = append(errs, dto_response.Error{
+				Domain:  k,
+				Message: translation,
+			})
+		}
+
+		r = dto_response.NewBadRequestResponse("Invalid request payload")
+		r.Errors = errs
+
 	case *json.UnmarshalTypeError:
 		r = dto_response.NewBadRequestResponse("Invalid request payload (type error)")
 
@@ -66,11 +81,12 @@ func (a *apiContext) translateBindErr(err error) dto_response.ErrorResponse {
 
 	default:
 		switch v {
-		case binding.ErrConvertMapStringSlice,
-			binding.ErrConvertToMapString,
-			binding.ErrMultiFileHeader,
-			binding.ErrMultiFileHeaderLenInvalid:
-			r = dto_response.NewBadRequestResponse("Invalid request payload (unmarshal error)")
+		case bindingInternal.ErrConvertMapStringSlice,
+			bindingInternal.ErrConvertToMapString,
+			bindingInternal.ErrMultiFileHeader,
+			bindingInternal.ErrMultiFileHeaderLenInvalid,
+			bindingInternal.ErrIgnoredBinding:
+			r = dto_response.NewBadRequestResponse("Invalid request payload")
 
 		default:
 			panic(err)
