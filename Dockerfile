@@ -14,7 +14,10 @@ RUN go build -tags http -o /project/capstone/build/capstone .
 RUN apk add --no-cache tzdata
 
 FROM alpine:latest
+
 COPY --from=builder /project/capstone/build/capstone /project/capstone/build/capstone
 
+WORKDIR /project/capstone/build/
+
 EXPOSE 8080
-ENTRYPOINT [ "cd" "/project/capstone/build", "&&" , "./capstone", "http" ]
+CMD [ "./capstone", "http" ]
