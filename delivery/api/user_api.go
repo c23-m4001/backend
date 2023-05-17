@@ -21,7 +21,7 @@ type UserApi struct {
 //	@tags		User
 //	@Accept		json
 //	@Produce	json
-//	@Success	200	{object}	dto_response.Response{data=dto_response.UserMeResponse}
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{user=dto_response.UserMeResponse}}
 func (a *UserApi) Me() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
@@ -30,7 +30,9 @@ func (a *UserApi) Me() gin.HandlerFunc {
 			ctx.json(
 				http.StatusOK,
 				dto_response.Response{
-					Data: dto_response.NewUserMeResponse(user),
+					Data: dto_response.DataResponse{
+						"user": dto_response.NewUserMeResponse(user),
+					},
 				},
 			)
 		},

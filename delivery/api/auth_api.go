@@ -21,7 +21,7 @@ type AuthApi struct {
 //	@Accept		json
 //	@Param		dto_request.AuthEmailLoginRequest	body	dto_request.AuthEmailLoginRequest	true	"Body Request"
 //	@Produce	json
-//	@Success	200	{object}	dto_response.Response{data=dto_response.AuthTokenResponse}
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{token=dto_response.AuthTokenResponse}}
 func (a *AuthApi) EmailLogin() gin.HandlerFunc {
 	return a.Guest(
 		func(ctx apiContext) {
@@ -33,7 +33,9 @@ func (a *AuthApi) EmailLogin() gin.HandlerFunc {
 			ctx.json(
 				http.StatusOK,
 				dto_response.Response{
-					Data: dto_response.NewAuthTokenResponse(token),
+					Data: dto_response.DataResponse{
+						"token": dto_response.NewAuthTokenResponse(token),
+					},
 				},
 			)
 		},
@@ -46,7 +48,7 @@ func (a *AuthApi) EmailLogin() gin.HandlerFunc {
 //	@Accept		json
 //	@Param		dto_request.AuthEmailRegisterRequest	body	dto_request.AuthEmailRegisterRequest	true	"Body Request"
 //	@Produce	json
-//	@Success	200	{object}	dto_response.Response{data=dto_response.AuthTokenResponse}
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{token=dto_response.AuthTokenResponse}}
 func (a *AuthApi) EmailRegister() gin.HandlerFunc {
 	return a.Guest(
 		func(ctx apiContext) {
@@ -58,7 +60,9 @@ func (a *AuthApi) EmailRegister() gin.HandlerFunc {
 			ctx.json(
 				http.StatusOK,
 				dto_response.Response{
-					Data: dto_response.NewAuthTokenResponse(token),
+					Data: dto_response.DataResponse{
+						"token": dto_response.NewAuthTokenResponse(token),
+					},
 				},
 			)
 		},
