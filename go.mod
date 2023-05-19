@@ -20,6 +20,7 @@ require (
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v4 v4.18.1
 	github.com/jmoiron/sqlx v1.3.5
+	github.com/nicksnyder/go-i18n/v2 v2.2.1
 	github.com/oschwald/geoip2-golang v1.8.0
 	github.com/spf13/cobra v1.7.0
 	github.com/swaggo/swag v1.16.1
