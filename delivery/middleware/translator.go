@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"capstone/internal/gin/validator"
+	internalI18n "capstone/internal/i18n"
 	"capstone/model"
 
 	"github.com/gin-gonic/gin"
@@ -21,9 +22,13 @@ func TranslatorHandler(router gin.IRouter) {
 		tag, _ := language.MatchStrings(matcher, accept)
 		locale := tag.String()
 
+		// gin validator
 		if validatorTranslator, ok := validator.Translators[locale]; ok {
 			ctx.Request = ctx.Request.WithContext(model.SetValidatorTranslatorCtx(ctx.Request.Context(), validatorTranslator))
 		}
+
+		// i18n
+		ctx.Set("i18n", internalI18n.NewLocalizer(locale))
 
 		ctx.Next()
 	})

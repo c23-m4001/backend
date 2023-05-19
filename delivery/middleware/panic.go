@@ -4,6 +4,7 @@ import (
 	"capstone/constant"
 	"capstone/delivery/dto_response"
 	"capstone/infrastructure"
+	internalI18n "capstone/internal/i18n"
 	"fmt"
 	"runtime/debug"
 
@@ -22,6 +23,13 @@ func PanicHandler(router gin.IRouter, loggerStack infrastructure.LoggerStack) {
 				switch v := r.(type) {
 				case dto_response.ErrorResponse:
 					instantResponse := v
+
+					localizer, _ := ctx.MustGet("i18n").(*internalI18n.Localizer)
+					localization, err := localizer.Translate(instantResponse.Message)
+					if err == nil {
+						instantResponse.Message = localization
+					}
+
 					ctx.AbortWithStatusJSON(instantResponse.Code, instantResponse)
 					return
 
