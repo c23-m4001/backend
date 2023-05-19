@@ -106,9 +106,13 @@ func (u *authUseCase) mustGetHashedPassword(originalPassword string) string {
 }
 
 func (u *authUseCase) mustValidateComparePassword(hashedPassword string, originalPassword string) {
-	panicIfErr(
-		bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(originalPassword)),
-	)
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(originalPassword))
+	if err != nil {
+		if err == bcrypt.ErrMismatchedHashAndPassword {
+			panic(dto_response.NewBadRequestResponse("Wrong Password"))
+		}
+		panic(err)
+	}
 }
 
 func (u *authUseCase) LoginEmail(ctx context.Context, request dto_request.AuthEmailLoginRequest) model.Token {
