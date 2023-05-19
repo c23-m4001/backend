@@ -10,7 +10,7 @@ func init() {
 				wallet_id char(36) NOT NULL,
 				user_id char(36) NOT NULL,
 				name varchar(255) NOT NULL,
-				amount varchar(255) NOT NULL,
+				amount decimal(16,2) NOT NULL,
 				date date NOT NULL,
 				created_at timestamp NULL,
 				updated_at timestamp NULL,
