@@ -71,8 +71,8 @@ func (o QueryOption) Prepare(stmt squirrel.SelectBuilder) squirrel.SelectBuilder
 		return stmt
 	}
 
-	o.SelectOption.Prepare(stmt)
-	o.PaginationOption.Prepare(stmt)
+	stmt = o.SelectOption.Prepare(stmt)
+	stmt = o.PaginationOption.Prepare(stmt)
 
 	return stmt
 }
@@ -103,7 +103,7 @@ type SelectOption struct {
 func (o SelectOption) Prepare(stmt squirrel.SelectBuilder) squirrel.SelectBuilder {
 	stmt = stmt.Columns(o.Fields...)
 
-	o.Sorts.Prepare(stmt)
+	stmt = o.Sorts.Prepare(stmt)
 
 	return stmt
 }
