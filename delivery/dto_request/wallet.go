@@ -4,7 +4,7 @@ import "capstone/data_type"
 
 type WalletCreateRequest struct {
 	Name     string                   `json:"name" validate:"required,not_empty" example:"Cash"`
-	LogoType data_type.WalletLogoType `json:"logo_type" validate:"required,data_type_enum"`
+	LogoType data_type.WalletLogoType `json:"logo_type" validate:"data_type_enum"`
 } // @name WalletCreateRequest
 
 type WalletFetchSorts []struct {
@@ -24,7 +24,7 @@ type WalletGetRequest struct {
 
 type WalletUpdateRequest struct {
 	Name     string                   `json:"name" validate:"required,not_empty" example:"Cash"`
-	LogoType data_type.WalletLogoType `json:"logo_type" validate:"required,data_type_enum"`
+	LogoType data_type.WalletLogoType `json:"logo_type" validate:"data_type_enum"`
 
 	WalletId string `json:"-" swaggerignore:"true"`
 } // @name WalletUpdateRequest
