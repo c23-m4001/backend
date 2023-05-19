@@ -17,6 +17,7 @@ type CategoryRepository interface {
 	Count(ctx context.Context, options ...model.CategoryQueryOption) (int, error)
 	Fetch(ctx context.Context, options ...model.CategoryQueryOption) ([]model.Category, error)
 	Get(ctx context.Context, id string) (*model.Category, error)
+	IsExist(ctx context.Context, id string) (bool, error)
 
 	// update
 	Update(ctx context.Context, category *model.Category) error
@@ -130,6 +131,17 @@ func (r *categoryRepository) Get(ctx context.Context, id string) (*model.Categor
 		Where(squirrel.Eq{"id": id})
 
 	return r.get(stmt)
+}
+
+func (r *categoryRepository) IsExist(ctx context.Context, id string) (bool, error) {
+	stmt := stmtBuilder.Select().Column(
+		stmtBuilder.Select("*").
+			From(model.CategoryTableName).
+			Where(squirrel.Eq{"id": id}).
+			Prefix("EXISTS (").Suffix(")"),
+	)
+
+	return isExist(r.db, stmt)
 }
 
 func (r *categoryRepository) Update(ctx context.Context, category *model.Category) error {
