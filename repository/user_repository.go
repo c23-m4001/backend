@@ -14,6 +14,7 @@ type UserRepository interface {
 	InsertMany(ctx context.Context, users []model.User) error
 
 	// read
+	Count(ctx context.Context) (int, error)
 	Get(ctx context.Context, id string) (*model.User, error)
 	GetByEmail(ctx context.Context, email string) (*model.User, error)
 
@@ -52,6 +53,13 @@ func (r *userRepository) InsertMany(ctx context.Context, users []model.User) err
 		arr = append(arr, &users[i])
 	}
 	return defaultInsertMany(r.db, ctx, arr, "*")
+}
+
+func (r *userRepository) Count(ctx context.Context) (int, error) {
+	stmt := stmtBuilder.Select("COUNT(*)").
+		From(model.UserTableName)
+
+	return count(r.db, stmt)
 }
 
 func (r *userRepository) Get(ctx context.Context, id string) (*model.User, error) {
