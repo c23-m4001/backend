@@ -8,18 +8,24 @@ import (
 
 type UseCaseManager interface {
 	AuthUseCase() use_case.AuthUseCase
+	CategoryUseCase() use_case.CategoryUseCase
 	UserUseCase() use_case.UserUseCase
 	WalletUseCase() use_case.WalletUseCase
 }
 
 type useCaseManager struct {
-	authUseCase   use_case.AuthUseCase
-	userUseCase   use_case.UserUseCase
-	walletUseCase use_case.WalletUseCase
+	authUseCase     use_case.AuthUseCase
+	categoryUseCase use_case.CategoryUseCase
+	userUseCase     use_case.UserUseCase
+	walletUseCase   use_case.WalletUseCase
 }
 
 func (m *useCaseManager) AuthUseCase() use_case.AuthUseCase {
 	return m.authUseCase
+}
+
+func (m *useCaseManager) CategoryUseCase() use_case.CategoryUseCase {
+	return m.categoryUseCase
 }
 
 func (m *useCaseManager) UserUseCase() use_case.UserUseCase {
@@ -47,6 +53,10 @@ func newUseCaseManager(
 			repositoryManager.UserRepository(),
 			geoIp,
 			jwt,
+		),
+		categoryUseCase: use_case.NewCategoryUseCase(
+			repositoryManager.CategoryRepository(),
+			baseUseCase,
 		),
 		userUseCase: use_case.NewUserUseCase(
 			repositoryManager.UserRepository(),

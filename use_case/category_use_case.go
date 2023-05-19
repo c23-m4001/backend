@@ -27,12 +27,12 @@ type CategoryUseCase interface {
 type categoryUseCase struct {
 	categoryRepository repository.CategoryRepository
 
-	baseUseCase baseUseCase
+	baseUseCase *baseUseCase
 }
 
 func NewCategoryUseCase(
 	categoryRepository repository.CategoryRepository,
-	baseUseCase baseUseCase,
+	baseUseCase *baseUseCase,
 ) CategoryUseCase {
 	return &categoryUseCase{
 		categoryRepository: categoryRepository,
