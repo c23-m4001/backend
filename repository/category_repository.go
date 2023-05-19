@@ -22,6 +22,7 @@ type CategoryRepository interface {
 	Update(ctx context.Context, category *model.Category) error
 
 	// delete
+	Delete(ctx context.Context, category *model.Category) error
 	Truncate(ctx context.Context) error
 }
 
@@ -137,6 +138,10 @@ func (r *categoryRepository) Update(ctx context.Context, category *model.Categor
 	}
 	columns := extractColumnsFromBaseModel(category, excludedColumns)
 	return defaultUpdate(r.db, ctx, category, columns, nil)
+}
+
+func (r *categoryRepository) Delete(ctx context.Context, category *model.Category) error {
+	return defaultDestroy(r.db, ctx, category, nil)
 }
 
 func (r *categoryRepository) Truncate(ctx context.Context) error {
