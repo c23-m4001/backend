@@ -9,15 +9,17 @@ import (
 type UseCaseManager interface {
 	AuthUseCase() use_case.AuthUseCase
 	CategoryUseCase() use_case.CategoryUseCase
+	TransactionUseCase() use_case.TransactionUseCase
 	UserUseCase() use_case.UserUseCase
 	WalletUseCase() use_case.WalletUseCase
 }
 
 type useCaseManager struct {
-	authUseCase     use_case.AuthUseCase
-	categoryUseCase use_case.CategoryUseCase
-	userUseCase     use_case.UserUseCase
-	walletUseCase   use_case.WalletUseCase
+	authUseCase        use_case.AuthUseCase
+	categoryUseCase    use_case.CategoryUseCase
+	transactionUseCase use_case.TransactionUseCase
+	userUseCase        use_case.UserUseCase
+	walletUseCase      use_case.WalletUseCase
 }
 
 func (m *useCaseManager) AuthUseCase() use_case.AuthUseCase {
@@ -26,6 +28,10 @@ func (m *useCaseManager) AuthUseCase() use_case.AuthUseCase {
 
 func (m *useCaseManager) CategoryUseCase() use_case.CategoryUseCase {
 	return m.categoryUseCase
+}
+
+func (m *useCaseManager) TransactionUseCase() use_case.TransactionUseCase {
+	return m.transactionUseCase
 }
 
 func (m *useCaseManager) UserUseCase() use_case.UserUseCase {
@@ -57,6 +63,10 @@ func newUseCaseManager(
 		),
 		categoryUseCase: use_case.NewCategoryUseCase(
 			repositoryManager.CategoryRepository(),
+			baseUseCase,
+		),
+		transactionUseCase: use_case.NewTransactionUseCase(
+			repositoryManager.TransactionRepository(),
 			baseUseCase,
 		),
 		userUseCase: use_case.NewUserUseCase(
