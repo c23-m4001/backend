@@ -24,3 +24,25 @@ func NewAuthTokenResponseP(token model.Token) *AuthTokenResponse {
 	r := NewAuthTokenResponse(token)
 	return &r
 }
+
+type LoginHistoryResponse struct {
+	Id           string
+	IpAddress    string
+	LocationName string
+	Time         data_type.DateTime
+} // @name LoginHistoryResponse
+
+func NewLoginHistoryResponse(userAccessToken model.UserAccessToken) LoginHistoryResponse {
+	r := LoginHistoryResponse{
+		Id:           userAccessToken.Id,
+		IpAddress:    *userAccessToken.IpAddress,
+		LocationName: *userAccessToken.LocationName,
+		Time:         userAccessToken.CreatedAt.DateTime(),
+	}
+	return r
+}
+
+func NewLoginHistoryResponseP(userAccessToken model.UserAccessToken) *LoginHistoryResponse {
+	r := NewLoginHistoryResponse(userAccessToken)
+	return &r
+}
