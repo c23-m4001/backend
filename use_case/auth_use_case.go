@@ -22,6 +22,8 @@ type AuthUseCase interface {
 	LoginEmail(ctx context.Context, request dto_request.AuthEmailLoginRequest) model.Token
 	RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token
 
+	LoginHistories(ctx context.Context) []model.UserAccessToken
+
 	Parse(ctx context.Context, token string) (*model.User, error)
 }
 
@@ -163,6 +165,15 @@ func (u *authUseCase) RegisterEmail(ctx context.Context, request dto_request.Aut
 		AccessTokenExpiredAt: data_type.NewDateTime(accessToken.ExpiredAt),
 		TokenType:            accessToken.Type,
 	}
+}
+
+func (u *authUseCase) LoginHistories(ctx context.Context) []model.UserAccessToken {
+	currentUser := model.MustGetUserCtx(ctx)
+
+	userAccessTokens, err := u.userAccessTokenRepository.FetchNLatestByUserId(ctx, currentUser.Id, 10)
+	panicIfErr(err)
+
+	return userAccessTokens
 }
 
 func (u *authUseCase) Parse(ctx context.Context, token string) (*model.User, error) {

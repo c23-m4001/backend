@@ -69,6 +69,35 @@ func (a *AuthApi) EmailRegister() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/auth/login-histories [post]
+//	@Summary	Login Histories (up to 10 login histories)
+//	@tags		Auth
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{token=dto_response.AuthTokenResponse}}
+func (a *AuthApi) LoginHistory() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+
+			userAccessTokens := a.authUseCase.LoginHistories(ctx.context())
+
+			nodes := []dto_response.LoginHistoryResponse{}
+			for _, userAccessToken := range userAccessTokens {
+				nodes = append(nodes, dto_response.NewLoginHistoryResponse(userAccessToken))
+			}
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.DataResponse{
+						"login_histories": nodes,
+					},
+				},
+			)
+		},
+	)
+}
+
 func RegisterAuthApi(router gin.IRouter, useCaseManager manager.UseCaseManager) {
 	api := AuthApi{
 		api:         newApi(),
@@ -79,4 +108,5 @@ func RegisterAuthApi(router gin.IRouter, useCaseManager manager.UseCaseManager) 
 
 	routerGroup.POST("/email-login", api.EmailLogin())
 	routerGroup.POST("/email-register", api.EmailRegister())
+	routerGroup.POST("/login-histories", api.LoginHistory())
 }
