@@ -168,6 +168,41 @@ func (a *WalletApi) Delete() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/wallets/options/transaction-form [post]
+//	@Summary	Option for Transaction Form
+//	@tags		Wallet
+//	@Accept		json
+//	@Produce	json
+//	@Param		dto_request.WalletOptionForTransactionFormRequest	body		dto_request.WalletOptionForTransactionFormRequest	true	"Body Request"
+//	@Success	200								{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.WalletResponse}}
+func (a *WalletApi) OptionForTransactionForm() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			var request dto_request.WalletOptionForTransactionFormRequest
+			ctx.mustBind(&request)
+
+			wallets, total := a.walletUseCase.OptionForTransactionForm(ctx.context(), request)
+
+			nodes := []dto_response.WalletResponse{}
+			for _, wallet := range wallets {
+				nodes = append(nodes, dto_response.NewWalletResponse(wallet))
+			}
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.PaginationResponse{
+						Limit: request.Limit,
+						Page:  request.Page,
+						Nodes: nodes,
+						Total: total,
+					},
+				},
+			)
+		},
+	)
+}
+
 func RegisterWalletApi(router gin.IRouter, useCaseManager manager.UseCaseManager) {
 	api := WalletApi{
 		api:           newApi(),
@@ -181,4 +216,7 @@ func RegisterWalletApi(router gin.IRouter, useCaseManager manager.UseCaseManager
 	routerGroup.GET("/:id", api.Get())
 	routerGroup.PUT("/:id", api.Update())
 	routerGroup.DELETE("/:id", api.Delete())
+
+	optionRouterGroup := routerGroup.Group("/options")
+	optionRouterGroup.POST("/transaction-form", api.OptionForTransactionForm())
 }
