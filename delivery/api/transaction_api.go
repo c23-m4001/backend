@@ -22,7 +22,7 @@ type TransactionApi struct {
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.TransactionCreateRequest	body		dto_request.TransactionCreateRequest	true	"Body Request"
-//	@Success	200								{object}	dto_response.Response{data=dto_response.DataResponse{transaction=dto_response.TransactionResponse}}
+//	@Success	200										{object}	dto_response.Response{data=dto_response.DataResponse{transaction=dto_response.TransactionResponse}}
 func (a *TransactionApi) Create() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
@@ -49,7 +49,7 @@ func (a *TransactionApi) Create() gin.HandlerFunc {
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.TransactionFetchRequest	body		dto_request.TransactionFetchRequest	true	"Body Request"
-//	@Success	200								{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.TransactionResponse}}
+//	@Success	200									{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.TransactionResponse}}
 func (a *TransactionApi) Fetch() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
@@ -84,8 +84,8 @@ func (a *TransactionApi) Fetch() gin.HandlerFunc {
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.TransactionGetRequest	body		dto_request.TransactionGetRequest	true	"Body Request"
-//	@Param		id								path		string							true	"Id"	format(uuid)
-//	@Success	200								{object}	dto_response.Response{data=dto_response.DataResponse{transaction=[]dto_response.TransactionResponse}}
+//	@Param		id									path		string								true	"Id"	format(uuid)
+//	@Success	200									{object}	dto_response.Response{data=dto_response.DataResponse{transaction=[]dto_response.TransactionResponse}}
 func (a *TransactionApi) Get() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
@@ -115,8 +115,8 @@ func (a *TransactionApi) Get() gin.HandlerFunc {
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.TransactionUpdateRequest	body		dto_request.TransactionUpdateRequest	true	"Body Request"
-//	@Param		id								path		string							true	"Id"	format(uuid)
-//	@Success	200								{object}	dto_response.Response{data=dto_response.DataResponse{transaction=[]dto_response.TransactionResponse}}
+//	@Param		id										path		string									true	"Id"	format(uuid)
+//	@Success	200										{object}	dto_response.Response{data=dto_response.DataResponse{transaction=[]dto_response.TransactionResponse}}
 func (a *TransactionApi) Update() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
@@ -146,8 +146,8 @@ func (a *TransactionApi) Update() gin.HandlerFunc {
 //	@tags		Transaction
 //	@Accept		json
 //	@Produce	json
-//	@Param		id								path		string							true	"Id"	format(uuid)
-//	@Success	200								{object}	dto_response.SuccessResponse
+//	@Param		id	path		string	true	"Id"	format(uuid)
+//	@Success	200	{object}	dto_response.SuccessResponse
 func (a *TransactionApi) Delete() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
