@@ -6,6 +6,7 @@ package validator
 
 import (
 	"capstone/data_type"
+	"capstone/delivery/dto_request"
 	"capstone/internal/gin/validator/translation"
 	"reflect"
 	"strings"
@@ -175,6 +176,11 @@ func (v *defaultValidator) lazyinit() {
 		v.validate.RegisterStructValidation(data_type.NullDateValidationFn, data_type.NullDate{})
 		v.validate.RegisterStructValidation(data_type.DateTimeValidationFn, data_type.DateTime{})
 		v.validate.RegisterStructValidation(data_type.NullDateTimeValidationFn, data_type.NullDateTime{})
+
+		v.validate.RegisterStructValidation(
+			dto_request.NullDateRangeRequestValidationFn,
+			dto_request.TransactionFetchRequest{},
+		)
 
 		translation.RegisterEnTranslations(v.validate, enTranslator)
 		translation.RegisterIdTranslations(v.validate, idTranslator)
