@@ -6,6 +6,7 @@ import (
 	"capstone/delivery/dto_request"
 	"capstone/delivery/dto_response"
 	geoIpInternal "capstone/internal/geoip"
+	"capstone/internal/google"
 	jwtInternal "capstone/internal/jwt"
 	"capstone/model"
 	"capstone/repository"
@@ -20,6 +21,7 @@ import (
 
 type AuthUseCase interface {
 	LoginEmail(ctx context.Context, request dto_request.AuthEmailLoginRequest) model.Token
+	LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.Token
 	RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token
 
 	LoginHistories(ctx context.Context) []model.UserAccessToken
@@ -136,6 +138,26 @@ func (u *authUseCase) LoginEmail(ctx context.Context, request dto_request.AuthEm
 		AccessTokenExpiredAt: data_type.NewDateTime(accessToken.ExpiredAt),
 		TokenType:            accessToken.Type,
 	}
+}
+
+func (u *authUseCase) LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.Token {
+	dataResponse, errorResponse, err := google.GoogleGetUserDataFromCode(request.Code)
+	if err != nil {
+		panic(err)
+	}
+
+	if errorResponse != nil {
+		panic(dto_response.NewBadRequestResponse("Sorry, we cannot recognize your account"))
+	}
+
+	// TODO: Need to register user if not registered yet
+
+	return u.LoginEmail(
+		ctx,
+		dto_request.AuthEmailLoginRequest{
+			Email: dataResponse.Email,
+		},
+	)
 }
 
 func (u *authUseCase) RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token {
