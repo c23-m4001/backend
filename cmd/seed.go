@@ -3,6 +3,10 @@
 package cmd
 
 import (
+	"capstone/config"
+	"capstone/database/seeder"
+	"capstone/database/seeder/production_seeder"
+	"capstone/manager"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -20,7 +24,27 @@ func seedCommand() *cobra.Command {
 		Short: "Seed all database",
 		Long:  "Seed all database with either production or development data",
 		Run: func(cmd *cobra.Command, args []string) {
+			config.DisableDebug()
 
+			container := manager.NewContainer(manager.LoadDefault)
+			defer func() {
+				if err := container.Close(); err != nil {
+					panic(err)
+				}
+			}()
+
+			repositoryManager := container.RepositoryManager()
+
+			if len(args) > 0 {
+				fmt.Printf("Seeder for table `%s` not found\n", args[0])
+				return
+			}
+
+			if flagProduction {
+				production_seeder.SeedAll(repositoryManager)
+			} else {
+				seeder.SeedAll(repositoryManager)
+			}
 		},
 	}
 
