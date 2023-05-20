@@ -73,6 +73,7 @@ func newUseCaseManager(
 			repositoryManager.UserRepository(),
 		),
 		walletUseCase: use_case.NewWalletUseCase(
+			repositoryManager.CompositeRepository(),
 			repositoryManager.WalletRepository(),
 			baseUseCase,
 		),
