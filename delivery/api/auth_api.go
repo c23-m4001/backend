@@ -74,7 +74,7 @@ func (a *AuthApi) EmailRegister() gin.HandlerFunc {
 //	@tags		Auth
 //	@Accept		json
 //	@Produce	json
-//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{token=dto_response.AuthTokenResponse}}
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{login_histories=[]dto_response.LoginHistoryResponse}}
 func (a *AuthApi) LoginHistory() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
