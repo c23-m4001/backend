@@ -7,7 +7,9 @@ import (
 )
 
 var Seeders = map[string]func(repositoryManager manager.RepositoryManager){
-	model.UserTableName: UserSeed,
+	model.CategoryTableName: CategorySeed,
+	model.UserTableName:     UserSeed,
+	model.WalletTableName:   WalletSeed,
 }
 
 func Seed(repositoryManager manager.RepositoryManager, tableName string) {
@@ -21,6 +23,9 @@ func Seed(repositoryManager manager.RepositoryManager, tableName string) {
 func SeedAll(repositoryManager manager.RepositoryManager) {
 	seedOrders := []string{
 		model.UserTableName,
+
+		model.CategoryTableName,
+		model.WalletTableName,
 	}
 
 	for _, tableName := range seedOrders {
