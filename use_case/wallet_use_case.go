@@ -38,6 +38,14 @@ func NewWalletUseCase(
 	}
 }
 
+func (u *walletUseCase) mustValidateWalletOwnedByCurrentUser(ctx context.Context, wallet model.Wallet) {
+	currentUser := model.MustGetUserCtx(ctx)
+
+	if wallet.UserId != currentUser.Id {
+		panic(dto_response.NewForbiddenResponse("WALLET.FORBIDDEN_ACCESS"))
+	}
+}
+
 func (u *walletUseCase) Create(ctx context.Context, request dto_request.WalletCreateRequest) model.Wallet {
 	currentUser := model.MustGetUserCtx(ctx)
 
@@ -73,24 +81,17 @@ func (u *walletUseCase) Fetch(ctx context.Context, request dto_request.WalletFet
 }
 
 func (u *walletUseCase) Get(ctx context.Context, request dto_request.WalletGetRequest) model.Wallet {
-	currentUser := model.MustGetUserCtx(ctx)
-
 	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsPath)
 
-	if wallet.UserId != currentUser.Id {
-		panic(dto_response.NewForbiddenResponse("WALLET.FORBIDDEN_ACCESS"))
-	}
+	u.mustValidateWalletOwnedByCurrentUser(ctx, wallet)
 
 	return wallet
 }
 
 func (u *walletUseCase) Update(ctx context.Context, request dto_request.WalletUpdateRequest) model.Wallet {
-	currentUser := model.MustGetUserCtx(ctx)
-	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsNotPath)
+	wallet := u.baseUseCase.mustGetWallet(ctx, request.WalletId, panicIsPath)
 
-	if wallet.UserId != currentUser.Id {
-		panic(dto_response.NewForbiddenResponse("WALLET.FORBIDDEN_ACCESS"))
-	}
+	u.mustValidateWalletOwnedByCurrentUser(ctx, wallet)
 
 	wallet.Name = request.Name
 	wallet.LogoType = request.LogoType
