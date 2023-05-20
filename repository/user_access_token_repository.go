@@ -14,6 +14,7 @@ type UserAccessTokenRepository interface {
 	InsertMany(ctx context.Context, userAccessTokens []model.UserAccessToken) error
 
 	// read
+	FetchNLatestByUserId(ctx context.Context, userId string, n int) ([]model.UserAccessToken, error)
 	Get(ctx context.Context, id string) (*model.UserAccessToken, error)
 	IsExist(ctx context.Context, id string) (bool, error)
 
@@ -29,6 +30,15 @@ func NewUserAccessTokenRepository(db infrastructure.DBTX) UserAccessTokenReposit
 	return &userAccessTokenRepository{
 		db: db,
 	}
+}
+
+func (r *userAccessTokenRepository) fetch(stmt squirrel.SelectBuilder) ([]model.UserAccessToken, error) {
+	userAccessTokens := []model.UserAccessToken{}
+	if err := fetch(r.db, &userAccessTokens, stmt); err != nil {
+		return nil, err
+	}
+
+	return userAccessTokens, nil
 }
 
 func (r *userAccessTokenRepository) get(stmt squirrel.SelectBuilder) (*model.UserAccessToken, error) {
@@ -50,6 +60,17 @@ func (r *userAccessTokenRepository) InsertMany(ctx context.Context, userAccessTo
 		arr = append(arr, &userAccessTokens[i])
 	}
 	return defaultInsertMany(r.db, ctx, arr, "*")
+}
+
+func (r *userAccessTokenRepository) FetchNLatestByUserId(ctx context.Context, userId string, n int) ([]model.UserAccessToken, error) {
+
+	stmt := stmtBuilder.Select("*").
+		From(model.UserAccessTokenTableName).
+		Where(squirrel.Eq{"user_id": userId}).
+		Limit(uint64(n)).
+		OrderBy("created_at DESC")
+
+	return r.fetch(stmt)
 }
 
 func (r *userAccessTokenRepository) Get(ctx context.Context, id string) (*model.UserAccessToken, error) {
