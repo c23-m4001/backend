@@ -36,6 +36,7 @@ func (m Category) ToMap() map[string]interface{} {
 type CategoryQueryOption struct {
 	QueryOption
 	IncludeGlobal *bool
+	IsExpense     *bool
 	UserId        *string
 	Phrase        *string
 }

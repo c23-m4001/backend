@@ -1,6 +1,8 @@
 package main
 
-import "capstone/cmd"
+import (
+	"capstone/cmd"
+)
 
 func main() {
 	cmd.Execute()

@@ -12,8 +12,9 @@ type CategoryFetchSorts []struct {
 
 type CategoryFetchRequest struct {
 	PaginationRequest
-	Sorts  CategoryFetchSorts `json:"sorts" validate:"unique=Field,dive"`
-	Phrase *string            `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
+	Sorts     CategoryFetchSorts `json:"sorts" validate:"unique=Field,dive"`
+	IsExpense *bool              `json:"is_expense"`
+	Phrase    *string            `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name CategoryFetchRequest
 
 type CategoryGetRequest struct {
@@ -30,3 +31,10 @@ type CategoryUpdateRequest struct {
 type CategoryDeleteRequest struct {
 	CategoryId string `json:"-" swaggerignore:"true"`
 } // @name CategoryDeleteRequest
+
+type CategoryOptionForTransactionFormRequest struct {
+	PaginationRequest
+	Sorts     CategoryFetchSorts `json:"sorts" validate:"unique=Field,dive"`
+	IsExpense *bool              `json:"is_expense"`
+	Phrase    *string            `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
+} // @name CategoryOptionForTransactionFormRequest
