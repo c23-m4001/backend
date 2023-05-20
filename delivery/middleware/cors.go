@@ -42,7 +42,7 @@ func CorsHandler(router gin.IRouter, allowedOrigins []string) {
 		corsMiddleware(ctx)
 
 		if ctx.Writer.Status() == http.StatusForbidden {
-			panic(dto_response.NewForbiddenResponse("CORS Error: This endpoint does not allow requests from this origin"))
+			panic(dto_response.NewForbiddenResponse("CORS"))
 		}
 
 		ctx.Next()

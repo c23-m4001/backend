@@ -109,7 +109,7 @@ func (u *authUseCase) mustValidateComparePassword(hashedPassword string, origina
 	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(originalPassword))
 	if err != nil {
 		if err == bcrypt.ErrMismatchedHashAndPassword {
-			panic(dto_response.NewBadRequestResponse("Wrong Password"))
+			panic(dto_response.NewBadRequestResponse("AUTH.WRONG_PASSWORD"))
 		}
 		panic(err)
 	}
@@ -119,7 +119,7 @@ func (u *authUseCase) LoginEmail(ctx context.Context, request dto_request.AuthEm
 	user, err := u.userRepository.GetByEmail(ctx, request.Email)
 	if err != nil {
 		if err == constant.ErrNoData {
-			panic(dto_response.NewBadRequestResponse("Email not registered"))
+			panic(dto_response.NewBadRequestResponse("AUTH.EMAIL_NOT_REGISTERED"))
 		}
 		panic(err)
 	}
@@ -141,7 +141,7 @@ func (u *authUseCase) RegisterEmail(ctx context.Context, request dto_request.Aut
 	if err != nil && err != constant.ErrNoData {
 		panic(err)
 	} else if checkUser != nil {
-		panic(dto_response.NewBadRequestResponse("Email already registered"))
+		panic(dto_response.NewBadRequestResponse("AUTH.EMAIL_REGISTERED"))
 	}
 
 	user := model.User{
