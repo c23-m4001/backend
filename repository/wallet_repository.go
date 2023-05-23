@@ -17,7 +17,7 @@ type WalletRepository interface {
 	// read
 	Count(ctx context.Context, options ...model.WalletQueryOption) (int, error)
 	Fetch(ctx context.Context, options ...model.WalletQueryOption) ([]model.Wallet, error)
-	FetchByUserId(ctx context.Context, userId string) ([]model.Wallet, error)
+	FetchByUserIds(ctx context.Context, userIds []string) ([]model.Wallet, error)
 	Get(ctx context.Context, id string) (*model.Wallet, error)
 	GetSumTotalAmountByUserId(ctx context.Context, userId string) (float64, error)
 	IsExist(ctx context.Context, id string) (bool, error)
@@ -118,10 +118,10 @@ func (r *walletRepository) Fetch(ctx context.Context, options ...model.WalletQue
 	return r.fetch(stmt)
 }
 
-func (r *walletRepository) FetchByUserId(ctx context.Context, userId string) ([]model.Wallet, error) {
+func (r *walletRepository) FetchByUserIds(ctx context.Context, userIds []string) ([]model.Wallet, error) {
 	stmt := stmtBuilder.Select("*").
 		From(model.WalletTableName).
-		Where(squirrel.Eq{"user_id": userId})
+		Where(squirrel.Eq{"user_id": userIds})
 
 	return r.fetch(stmt)
 }

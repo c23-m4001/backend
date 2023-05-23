@@ -9,16 +9,23 @@ type UserMeResponse struct {
 	Email string `json:"email" example:"email@gmailcom"`
 	Name  string `json:"name" example:"John Doe"`
 
-	HaveWallet *bool `json:"have_wallet" extensions:"x-nullable"`
-} // @name UserMeResponse
+	Wallets []WalletResponse `json:"wallets" extensions:"x-nullable"`
+}
 
 func NewUserMeResponse(user model.User) UserMeResponse {
 	r := UserMeResponse{
-		Id:         user.Id,
-		Email:      user.Email,
-		Name:       user.Name,
-		HaveWallet: user.HaveWallet,
+		Id:    user.Id,
+		Email: user.Email,
+		Name:  user.Name,
 	}
+
+	if user.Wallets != nil {
+		user.Wallets = []model.Wallet{}
+		for _, wallet := range user.Wallets {
+			r.Wallets = append(r.Wallets, NewWalletResponse(wallet))
+		}
+	}
+
 	return r
 }
 

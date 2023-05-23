@@ -11,7 +11,7 @@ type User struct {
 	Password string `db:"password"`
 	Timestamp
 
-	HaveWallet *bool `db:"-"`
+	Wallets []Wallet `db:"-"`
 }
 
 func (m User) TableName() string {
