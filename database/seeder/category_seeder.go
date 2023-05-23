@@ -1,6 +1,7 @@
 package seeder
 
 import (
+	"capstone/data_type"
 	"capstone/manager"
 	"capstone/model"
 	"context"
@@ -14,6 +15,7 @@ var (
 		Name:      "Makanan & Minuman",
 		IsGlobal:  true,
 		IsExpense: true,
+		LogoType:  data_type.CategoryLogoTypeFoodBeverage,
 	}
 	CategoryDefaultTwo = model.Category{
 		Id:        "7f36b362-ba9e-446a-811d-e2ebc72971da",
@@ -21,6 +23,7 @@ var (
 		Name:      "Transportasi",
 		IsGlobal:  true,
 		IsExpense: true,
+		LogoType:  data_type.CategoryLogoTypeTransportation,
 	}
 	CategoryDefaultThree = model.Category{
 		Id:        "decedad9-8350-4a64-8a8b-82379aea3d4f",
@@ -28,6 +31,7 @@ var (
 		Name:      "Gaji",
 		IsGlobal:  true,
 		IsExpense: false,
+		LogoType:  data_type.CategoryLogoTypeOther,
 	}
 	CategoryDefaultFour = model.Category{
 		Id:        "709d4a02-f906-4d72-8228-32b99197db91",
@@ -35,6 +39,7 @@ var (
 		Name:      "Transfer Keluar",
 		IsGlobal:  true,
 		IsExpense: false,
+		LogoType:  data_type.CategoryLogoTypeOther,
 	}
 	CategoryDefaultFive = model.Category{
 		Id:        "9358754d-3917-4589-8098-b22ecda1f588",
@@ -42,6 +47,7 @@ var (
 		Name:      "Transfer Masuk",
 		IsGlobal:  true,
 		IsExpense: true,
+		LogoType:  data_type.CategoryLogoTypeOther,
 	}
 
 	// Category User
@@ -51,6 +57,7 @@ var (
 		Name:      "Makanan",
 		IsGlobal:  false,
 		IsExpense: true,
+		LogoType:  data_type.CategoryLogoTypeFoodBeverage,
 	}
 	CategoryTwo = model.Category{
 		Id:        "7de25382-f9a7-40ee-9f19-21157e724181",
@@ -58,6 +65,7 @@ var (
 		Name:      "Gaji",
 		IsGlobal:  false,
 		IsExpense: false,
+		LogoType:  data_type.CategoryLogoTypeOther,
 	}
 )
 
