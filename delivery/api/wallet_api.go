@@ -174,7 +174,7 @@ func (a *WalletApi) Delete() gin.HandlerFunc {
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.WalletOptionForTransactionFormRequest	body		dto_request.WalletOptionForTransactionFormRequest	true	"Body Request"
-//	@Success	200								{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.WalletResponse}}
+//	@Success	200													{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.WalletResponse}}
 func (a *WalletApi) OptionForTransactionForm() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {

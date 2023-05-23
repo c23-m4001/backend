@@ -16,7 +16,10 @@ type UserAccessTokenRepository interface {
 	// read
 	FetchNLatestByUserId(ctx context.Context, userId string, n int) ([]model.UserAccessToken, error)
 	Get(ctx context.Context, id string) (*model.UserAccessToken, error)
-	IsExist(ctx context.Context, id string) (bool, error)
+	IsExistById(ctx context.Context, id string) (bool, error)
+
+	// update
+	UpdateRevokedById(ctx context.Context, id string, revoked bool) error
 
 	// delete
 	Truncate(ctx context.Context) error
@@ -81,7 +84,7 @@ func (r *userAccessTokenRepository) Get(ctx context.Context, id string) (*model.
 	return r.get(stmt)
 }
 
-func (r *userAccessTokenRepository) IsExist(ctx context.Context, id string) (bool, error) {
+func (r *userAccessTokenRepository) IsExistById(ctx context.Context, id string) (bool, error) {
 	stmt := stmtBuilder.Select().Column(
 		stmtBuilder.Select("1").
 			From(model.UserAccessTokenTableName).
@@ -90,6 +93,17 @@ func (r *userAccessTokenRepository) IsExist(ctx context.Context, id string) (boo
 	)
 
 	return isExist(r.db, stmt)
+}
+
+func (r *userAccessTokenRepository) UpdateRevokedById(ctx context.Context, id string, revoked bool) error {
+	params := map[string]interface{}{
+		"revoked": revoked,
+	}
+	whereStmt := squirrel.Eq{
+		"id": id,
+	}
+
+	return update(r.db, model.UserAccessTokenTableName, params, whereStmt)
 }
 
 func (r *userAccessTokenRepository) Truncate(ctx context.Context) error {

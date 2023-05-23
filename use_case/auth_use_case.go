@@ -22,6 +22,7 @@ import (
 type AuthUseCase interface {
 	LoginEmail(ctx context.Context, request dto_request.AuthEmailLoginRequest) model.Token
 	LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.GoogleLoginData
+	Logout(ctx context.Context, token string)
 	RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token
 
 	LoginHistories(ctx context.Context) []model.UserAccessToken
@@ -181,6 +182,16 @@ func (u *authUseCase) LoginGoogle(ctx context.Context, request dto_request.AuthG
 	}
 }
 
+func (u *authUseCase) Logout(ctx context.Context, token string) {
+	payload, err := u.jwt.Parse(token)
+	if err != nil {
+		panic(constant.ErrNotAuthenticated)
+	}
+
+	err = u.userAccessTokenRepository.UpdateRevokedById(ctx, payload.Id, true)
+	panic(err)
+}
+
 func (u *authUseCase) RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token {
 	checkUser, err := u.userRepository.GetByEmail(ctx, request.Email)
 	if err != nil && err != constant.ErrNoData {
@@ -230,7 +241,7 @@ func (u *authUseCase) Parse(ctx context.Context, token string) (*model.User, err
 		userId  = payload.UserId
 	)
 
-	isExist, err := u.userAccessTokenRepository.IsExist(ctx, tokenId)
+	isExist, err := u.userAccessTokenRepository.IsExistById(ctx, tokenId)
 	if err != nil {
 		return nil, err
 	}

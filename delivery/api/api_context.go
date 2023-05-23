@@ -32,6 +32,10 @@ func (a *apiContext) getParam(key string) string {
 	return a.ginCtx.Param(key)
 }
 
+func (a *apiContext) getBearerTokenOnly() string {
+	return a.ginCtx.Request.Header.Get("Authorization")[7:]
+}
+
 func (a *apiContext) getUuidParam(key string) string {
 	uuidParam := a.getParam(key)
 

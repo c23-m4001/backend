@@ -125,6 +125,27 @@ func (a *AuthApi) LoginHistory() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/auth/logout [post]
+//	@Summary	Logout
+//	@tags		Auth
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{object}	dto_response.SuccessResponse
+func (a *AuthApi) Logout() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			a.authUseCase.Logout(ctx.context(), ctx.getBearerTokenOnly())
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.SuccessResponse{
+					Message: "OK",
+				},
+			)
+		},
+	)
+}
+
 func RegisterAuthApi(router gin.IRouter, useCaseManager manager.UseCaseManager) {
 	api := AuthApi{
 		api:         newApi(),
@@ -137,4 +158,5 @@ func RegisterAuthApi(router gin.IRouter, useCaseManager manager.UseCaseManager) 
 	routerGroup.POST("/google-login", api.GoogleLogin())
 	routerGroup.POST("/email-register", api.EmailRegister())
 	routerGroup.POST("/login-histories", api.LoginHistory())
+	routerGroup.POST("/logout", api.Logout())
 }
