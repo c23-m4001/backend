@@ -47,6 +47,8 @@ type TransactionQueryOption struct {
 	CategoryId *string
 	UserId     *string
 	WalletId   *string
+	StartDate  data_type.NullDate
+	EndDate    data_type.NullDate
 
 	Phrase *string
 }

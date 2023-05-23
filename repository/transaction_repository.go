@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"capstone/data_type"
 	"capstone/infrastructure"
 	"capstone/model"
 	"context"
@@ -18,6 +19,7 @@ type TransactionRepository interface {
 	Fetch(ctx context.Context, options ...model.TransactionQueryOption) ([]model.Transaction, error)
 	Get(ctx context.Context, id string) (*model.Transaction, error)
 	IsExistByCategoryId(ctx context.Context, categoryId string) (bool, error)
+	GetSumAmountFromPreviousDate(ctx context.Context, startingDate data_type.Date) (float64, error)
 
 	// update
 	Update(ctx context.Context, transaction *model.Transaction) error
@@ -79,6 +81,14 @@ func (r *transactionRepository) prepareQuery(option model.TransactionQueryOption
 		stmt = stmt.Where(squirrel.ILike{"name": phrase})
 	}
 
+	if option.StartDate.DateP() != nil {
+		stmt = stmt.Where(squirrel.GtOrEq{"date": option.StartDate})
+	}
+
+	if option.EndDate.DateP() != nil {
+		stmt = stmt.Where(squirrel.Lt{"date": option.EndDate})
+	}
+
 	stmt = option.Prepare(stmt)
 
 	return stmt
@@ -138,6 +148,20 @@ func (r *transactionRepository) IsExistByCategoryId(ctx context.Context, categor
 	)
 
 	return isExist(r.db, stmt)
+}
+
+func (r *transactionRepository) GetSumAmountFromPreviousDate(ctx context.Context, startingDate data_type.Date) (float64, error) {
+	stmt := stmtBuilder.Select().
+		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When("is_expense = true", "-1 * amount").Else("amount"), ")")).
+		From(model.WalletTableName).
+		Where(squirrel.Lt{"date": startingDate})
+
+	sumTotal := 0.0
+	if err := get(r.db, &sumTotal, stmt); err != nil {
+		return 0, err
+	}
+
+	return sumTotal, nil
 }
 
 func (r *transactionRepository) Update(ctx context.Context, transaction *model.Transaction) error {

@@ -18,6 +18,8 @@ type TransactionUseCase interface {
 
 	// read
 	Fetch(ctx context.Context, request dto_request.TransactionFetchRequest) ([]model.Transaction, int)
+	// TODO: make summary api
+	// GetSummary(ctx context.Context)
 	Get(ctx context.Context, request dto_request.TransactionGetRequest) model.Transaction
 
 	// update
@@ -104,6 +106,8 @@ func (u *transactionUseCase) Fetch(ctx context.Context, request dto_request.Tran
 		CategoryId:  request.CategoryId,
 		UserId:      util.StringP(model.MustGetUserCtx(ctx).Id),
 		WalletId:    request.WalletId,
+		StartDate:   request.StartDate.NullDate(),
+		EndDate:     request.EndDate.NullDate(),
 		Phrase:      request.Phrase,
 	}
 

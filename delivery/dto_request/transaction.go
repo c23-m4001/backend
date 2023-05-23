@@ -21,10 +21,10 @@ type TransactionFetchRequest struct {
 	PaginationRequest
 	Sorts TransactionFetchSorts `json:"sorts" validate:"unique=Field,dive"`
 
-	StartDate  data_type.NullDate `json:"start_date" format:"YYYY-MM-DD" example:"2006-01-02"`
-	EndDate    data_type.NullDate `json:"end_date" format:"YYYY-MM-DD" example:"2006-01-02"`
-	CategoryId *string            `json:"category_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
-	WalletId   *string            `json:"wallet_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+	StartDate  data_type.Date `json:"start_date" format:"YYYY-MM-DD" example:"2006-01-02"`
+	EndDate    data_type.Date `json:"end_date" format:"YYYY-MM-DD" example:"2006-01-02"`
+	CategoryId *string        `json:"category_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+	WalletId   *string        `json:"wallet_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
 
 	Phrase *string `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name TransactionFetchRequest
