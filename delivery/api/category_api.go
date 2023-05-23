@@ -96,8 +96,10 @@ func (a *CategoryApi) FetchDefaults() gin.HandlerFunc {
 
 			ctx.json(
 				http.StatusOK,
-				dto_response.DataResponse{
-					"categories": nodes,
+				dto_response.Response{
+					Data: dto_response.DataResponse{
+						"categories": nodes,
+					},
 				},
 			)
 		},
