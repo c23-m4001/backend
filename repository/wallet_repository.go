@@ -19,8 +19,9 @@ type WalletRepository interface {
 	Fetch(ctx context.Context, options ...model.WalletQueryOption) ([]model.Wallet, error)
 	FetchByUserId(ctx context.Context, userId string) ([]model.Wallet, error)
 	Get(ctx context.Context, id string) (*model.Wallet, error)
-	IsExist(ctx context.Context, id string) (bool, error)
 	GetSumTotalAmountByUserId(ctx context.Context, userId string) (float64, error)
+	IsExist(ctx context.Context, id string) (bool, error)
+	IsExistByUserIds(ctx context.Context, userIds []string) (map[string]bool, error)
 
 	// update
 	Update(ctx context.Context, wallet *model.Wallet) error
@@ -133,17 +134,6 @@ func (r *walletRepository) Get(ctx context.Context, id string) (*model.Wallet, e
 	return r.get(stmt)
 }
 
-func (r *walletRepository) IsExist(ctx context.Context, id string) (bool, error) {
-	stmt := stmtBuilder.Select().Column(
-		stmtBuilder.Select("*").
-			From(model.WalletTableName).
-			Where(squirrel.Eq{"id": id}).
-			Prefix("EXISTS (").Suffix(")"),
-	)
-
-	return isExist(r.db, stmt)
-}
-
 func (r *walletRepository) GetSumTotalAmountByUserId(ctx context.Context, userId string) (float64, error) {
 	stmt := stmtBuilder.Select("SUM(total_amount)").
 		From(model.WalletTableName).
@@ -155,6 +145,35 @@ func (r *walletRepository) GetSumTotalAmountByUserId(ctx context.Context, userId
 	}
 
 	return sumTotal, nil
+}
+
+func (r *walletRepository) IsExist(ctx context.Context, id string) (bool, error) {
+	stmt := stmtBuilder.Select().Column(
+		stmtBuilder.Select("*").
+			From(model.WalletTableName).
+			Where(squirrel.Eq{"id": id}).
+			Prefix("EXISTS (").Suffix(")"),
+	)
+
+	return isExist(r.db, stmt)
+}
+
+func (r *walletRepository) IsExistByUserIds(ctx context.Context, userIds []string) (map[string]bool, error) {
+	stmt := stmtBuilder.Select("DISTINCT user_id").
+		From(model.WalletTableName).
+		Where(squirrel.Eq{"user_id": userIds})
+
+	fetchedUserIds := []string{}
+	if err := fetch(r.db, &fetchedUserIds, stmt); err != nil {
+		return nil, err
+	}
+
+	mapped := map[string]bool{}
+	for _, fetchedUserId := range fetchedUserIds {
+		mapped[fetchedUserId] = true
+	}
+
+	return mapped, nil
 }
 
 func (r *walletRepository) Update(ctx context.Context, wallet *model.Wallet) error {

@@ -10,6 +10,8 @@ type User struct {
 	Email    string `db:"email"`
 	Password string `db:"password"`
 	Timestamp
+
+	HaveWallet *bool `db:"-"`
 }
 
 func (m User) TableName() string {
