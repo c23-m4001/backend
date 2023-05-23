@@ -62,6 +62,7 @@ func (u *categoryUseCase) Create(ctx context.Context, request dto_request.Catego
 		Name:      request.Name,
 		IsGlobal:  false,
 		IsExpense: request.IsExpense,
+		LogoType:  request.LogoType,
 	}
 
 	panicIfErr(
@@ -114,6 +115,7 @@ func (u *categoryUseCase) Update(ctx context.Context, request dto_request.Catego
 
 	category.Name = request.Name
 	category.IsExpense = request.IsExpense
+	category.LogoType = request.LogoType
 
 	panicIfErr(
 		u.categoryRepository.Update(ctx, &category),

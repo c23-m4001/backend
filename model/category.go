@@ -1,15 +1,18 @@
 package model
 
+import "capstone/data_type"
+
 const CategoryTableName = "categories"
 
 var category BaseModel = &Category{}
 
 type Category struct {
-	Id        string  `db:"id"`
-	UserId    *string `db:"user_id"`
-	Name      string  `db:"name"`
-	IsGlobal  bool    `db:"is_global"`
-	IsExpense bool    `db:"is_expense"`
+	Id        string                     `db:"id"`
+	UserId    *string                    `db:"user_id"`
+	Name      string                     `db:"name"`
+	IsGlobal  bool                       `db:"is_global"`
+	IsExpense bool                       `db:"is_expense"`
+	LogoType  data_type.CategoryLogoType `db:"logo_type"`
 	Timestamp
 }
 
@@ -28,6 +31,7 @@ func (m Category) ToMap() map[string]interface{} {
 		"name":       m.Name,
 		"is_global":  m.IsGlobal,
 		"is_expense": m.IsExpense,
+		"logo_type":  m.LogoType,
 		"created_at": m.CreatedAt,
 		"updated_at": m.UpdatedAt,
 	}

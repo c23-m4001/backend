@@ -1,8 +1,11 @@
 package dto_request
 
+import "capstone/data_type"
+
 type CategoryCreateRequest struct {
-	Name      string `json:"name" validate:"required,not_empty" example:"Makanan"`
-	IsExpense bool   `json:"is_expense"`
+	Name      string                     `json:"name" validate:"required,not_empty" example:"Makanan"`
+	IsExpense bool                       `json:"is_expense"`
+	LogoType  data_type.CategoryLogoType `json:"logo_type" validate:"required,data_type_enum"`
 } // @name CategoryCreateRequest
 
 type CategoryFetchSorts []struct {
@@ -23,8 +26,9 @@ type CategoryGetRequest struct {
 } // @name CategoryGetRequest
 
 type CategoryUpdateRequest struct {
-	Name      string `json:"name" validate:"required,not_empty"`
-	IsExpense bool   `json:"is_expense"`
+	Name      string                     `json:"name" validate:"required,not_empty"`
+	IsExpense bool                       `json:"is_expense"`
+	LogoType  data_type.CategoryLogoType `json:"logo_type" validate:"required,data_type_enum"`
 
 	CategoryId string `json:"-" swaggerignore:"true"`
 } // @name CategoryUpdateRequest
