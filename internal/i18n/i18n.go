@@ -12,7 +12,7 @@ import (
 var bundle *i18n.Bundle
 
 func init() {
-	languageDir := path.Join(config.GetBaseDir(), "internal", "i18n", "language")
+	languageDir := path.Join(config.GetBaseDir(), "storage", "i18n", "language")
 
 	bundle = i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("yml", yaml.Unmarshal)
