@@ -135,16 +135,16 @@ func (u *transactionUseCase) Get(ctx context.Context, request dto_request.Transa
 }
 
 func (u *transactionUseCase) GetSummary(ctx context.Context, request dto_request.TransactionGetSummaryRequest) model.TransactionSummary {
-	totalPreviousExpense, err := u.transactionRepository.GetSumAmountFromPreviousDateAndIsExpense(ctx, request.StartDate, true)
+	totalPreviousExpense, err := u.transactionRepository.GetSumAmountByWalletIdAndFromPreviousDateAndIsExpense(ctx, request.WalletId, request.StartDate, true)
 	panicIfErr(err)
 
-	totalPreviousIncome, err := u.transactionRepository.GetSumAmountFromPreviousDateAndIsExpense(ctx, request.StartDate, false)
+	totalPreviousIncome, err := u.transactionRepository.GetSumAmountByWalletIdAndFromPreviousDateAndIsExpense(ctx, request.WalletId, request.StartDate, false)
 	panicIfErr(err)
 
-	totalCurrentExpense, err := u.transactionRepository.GetSumAmountByDateRangeAndIsExpense(ctx, request.StartDate, request.EndDate, true)
+	totalCurrentExpense, err := u.transactionRepository.GetSumAmountByWalletIdAndDateRangeAndIsExpense(ctx, request.WalletId, request.StartDate, request.EndDate, true)
 	panicIfErr(err)
 
-	totalCurrentIncome, err := u.transactionRepository.GetSumAmountByDateRangeAndIsExpense(ctx, request.StartDate, request.EndDate, false)
+	totalCurrentIncome, err := u.transactionRepository.GetSumAmountByWalletIdAndDateRangeAndIsExpense(ctx, request.WalletId, request.StartDate, request.EndDate, false)
 	panicIfErr(err)
 
 	return model.TransactionSummary{
@@ -155,10 +155,10 @@ func (u *transactionUseCase) GetSummary(ctx context.Context, request dto_request
 }
 
 func (u *transactionUseCase) GetSummaryTotal(ctx context.Context, request dto_request.TransactionGetSummaryTotalRequest) model.TransactionSummaryTotal {
-	totalExpense, err := u.transactionRepository.GetSumAmountByIsExpense(ctx, true)
+	totalExpense, err := u.transactionRepository.GetSumAmountByWalletIdAndIsExpense(ctx, request.WalletId, true)
 	panicIfErr(err)
 
-	totalIncome, err := u.transactionRepository.GetSumAmountByIsExpense(ctx, false)
+	totalIncome, err := u.transactionRepository.GetSumAmountByWalletIdAndIsExpense(ctx, request.WalletId, false)
 	panicIfErr(err)
 
 	return model.TransactionSummaryTotal{
