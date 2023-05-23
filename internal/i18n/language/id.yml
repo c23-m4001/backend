@@ -14,6 +14,7 @@ AUTH.WRONG_PASSWORD: Password salah
 
 # category
 CATEGORY.IS_DEFAULT_CATEGORY: Ini adalah kategori default
+CATEGORY.IN_USED: Kategori sedang digunakan, tidak dapat dihapus
 
 # wallet
 WALLET.FORBIDDEN_ACCESS: Dilarang untuk mengakses dompet ini

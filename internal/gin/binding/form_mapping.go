@@ -137,7 +137,6 @@ type setOptions struct {
 	defaultValue    string
 }
 
-// TODO: need to support both content type JSON (json) and FORM (form, form-urlencoded, multipart/form-data) because using same tag `json`
 func tryToSetValue(value reflect.Value, field reflect.StructField, setter setter, tag string) (bool, error) {
 	var tagValue string
 	var setOpt setOptions

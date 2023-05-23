@@ -44,6 +44,15 @@ func NewCategoryUseCase(
 	}
 }
 
+func (u *categoryUseCase) mustValidateAllowDelete(ctx context.Context, categoryId string) {
+	isExist, err := u.categoryRepository.IsExist(ctx, categoryId)
+	panicIfErr(err)
+
+	if isExist {
+		panic(dto_response.NewBadRequestResponse("CATEGORY.IN_USED"))
+	}
+}
+
 func (u *categoryUseCase) Create(ctx context.Context, request dto_request.CategoryCreateRequest) model.Category {
 	currentUser := model.MustGetUserCtx(ctx)
 
@@ -124,7 +133,7 @@ func (u *categoryUseCase) Delete(ctx context.Context, request dto_request.Catego
 		panic(dto_response.NewForbiddenResponse("FORBIDDEN"))
 	}
 
-	// TODO: validate not used before delete
+	u.mustValidateAllowDelete(ctx, request.CategoryId)
 
 	panicIfErr(
 		u.categoryRepository.Delete(ctx, &category),

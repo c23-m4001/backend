@@ -13,6 +13,7 @@ AUTH.WRONG_PASSWORD: Wrong Password
 
 # category
 CATEGORY.IS_DEFAULT_CATEGORY: This is a default category
+CATEGORY.IN_USED: Category in used, cannot be deleted
 
 # wallet
 WALLET.FORBIDDEN_ACCESS: Forbidden to access this wallet
