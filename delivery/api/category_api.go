@@ -78,6 +78,32 @@ func (a *CategoryApi) Fetch() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/categories/defaults [post]
+//	@Summary	Fetch Default Categories
+//	@tags		Category
+//	@Accept		json
+//	@Produce	json
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{categories=[]dto_response.CategoryResponse}}
+func (a *CategoryApi) FetchDefaults() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			categories := a.categoryUseCase.FetchDefaults(ctx.context())
+
+			nodes := []dto_response.CategoryResponse{}
+			for _, category := range categories {
+				nodes = append(nodes, dto_response.NewCategoryResponse(category))
+			}
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.DataResponse{
+					"categories": nodes,
+				},
+			)
+		},
+	)
+}
+
 //	@Router		/categories/{id} [get]
 //	@Summary	Get
 //	@tags		Category
@@ -216,6 +242,7 @@ func RegisterCategoryApi(router gin.IRouter, useCaseManager manager.UseCaseManag
 
 	routerGroup.POST("", api.Create())
 	routerGroup.POST("/filter", api.Fetch())
+	routerGroup.POST("/defaults", api.FetchDefaults())
 	routerGroup.GET("/:id", api.Get())
 	routerGroup.PUT("/:id", api.Update())
 	routerGroup.DELETE("/:id", api.Delete())

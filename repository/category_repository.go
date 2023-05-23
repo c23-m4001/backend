@@ -16,6 +16,7 @@ type CategoryRepository interface {
 	// read
 	Count(ctx context.Context, options ...model.CategoryQueryOption) (int, error)
 	Fetch(ctx context.Context, options ...model.CategoryQueryOption) ([]model.Category, error)
+	FetchByIsGlobal(ctx context.Context, isGlobal bool) ([]model.Category, error)
 	FetchByIds(ctx context.Context, ids []string) ([]model.Category, error)
 	Get(ctx context.Context, id string) (*model.Category, error)
 	IsExist(ctx context.Context, id string) (bool, error)
@@ -67,10 +68,6 @@ func (r *categoryRepository) prepareQuery(option model.CategoryQueryOption) squi
 
 	if option.IsExpense != nil {
 		stmt = stmt.Where(squirrel.Eq{"is_expense": option.IsExpense})
-	}
-
-	if option.IsGlobal != nil {
-		stmt = stmt.Where(squirrel.Eq{"is_global": option.IsGlobal})
 	}
 
 	if option.UserId != nil {
@@ -130,6 +127,14 @@ func (r *categoryRepository) Fetch(ctx context.Context, options ...model.Categor
 	option.SetDefault()
 
 	stmt := r.prepareQuery(option)
+
+	return r.fetch(stmt)
+}
+
+func (r *categoryRepository) FetchByIsGlobal(ctx context.Context, isGlobal bool) ([]model.Category, error) {
+	stmt := stmtBuilder.Select("*").
+		From(model.CategoryTableName).
+		Where(squirrel.Eq{"is_global": isGlobal})
 
 	return r.fetch(stmt)
 }

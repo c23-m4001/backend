@@ -15,6 +15,7 @@ type CategoryUseCase interface {
 
 	// read
 	Fetch(ctx context.Context, request dto_request.CategoryFetchRequest) ([]model.Category, int)
+	FetchDefaults(ctx context.Context) []model.Category
 	Get(ctx context.Context, request dto_request.CategoryGetRequest) model.Category
 
 	// update
@@ -76,11 +77,10 @@ func (u *categoryUseCase) Fetch(ctx context.Context, request dto_request.Categor
 	currentUser := model.MustGetUserCtx(ctx)
 
 	queryOption := model.CategoryQueryOption{
-		QueryOption:   model.NewBasicQueryOption(request.Limit, request.Page, model.Sorts(request.Sorts)),
-		IncludeGlobal: util.BoolP(true),
-		IsExpense:     request.IsExpense,
-		UserId:        &currentUser.Id,
-		Phrase:        request.Phrase,
+		QueryOption: model.NewBasicQueryOption(request.Limit, request.Page, model.Sorts(request.Sorts)),
+		IsExpense:   request.IsExpense,
+		UserId:      &currentUser.Id,
+		Phrase:      request.Phrase,
 	}
 
 	categories, err := u.categoryRepository.Fetch(ctx, queryOption)
@@ -90,6 +90,13 @@ func (u *categoryUseCase) Fetch(ctx context.Context, request dto_request.Categor
 	panicIfErr(err)
 
 	return categories, total
+}
+
+func (u *categoryUseCase) FetchDefaults(ctx context.Context) []model.Category {
+	categories, err := u.categoryRepository.FetchByIsGlobal(ctx, true)
+	panicIfErr(err)
+
+	return categories
 }
 
 func (u *categoryUseCase) Get(ctx context.Context, request dto_request.CategoryGetRequest) model.Category {
