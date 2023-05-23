@@ -16,7 +16,7 @@ type WalletLoader struct {
 }
 
 func (l *WalletLoader) loadByUserId(userId string) ([]model.Wallet, error) {
-	thunk := l.loaderHaveWalletByUserId.Load(context.TODO(), dataloader.StringKey(userId))
+	thunk := l.loaderByUserId.Load(context.TODO(), dataloader.StringKey(userId))
 
 	result, err := thunk()
 	if err != nil {
