@@ -20,7 +20,7 @@ func NewUserMeResponse(user model.User) UserMeResponse {
 	}
 
 	if user.Wallets != nil {
-		user.Wallets = []model.Wallet{}
+		r.Wallets = []WalletResponse{}
 		for _, wallet := range user.Wallets {
 			r.Wallets = append(r.Wallets, NewWalletResponse(wallet))
 		}
