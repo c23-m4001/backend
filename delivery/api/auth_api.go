@@ -48,20 +48,20 @@ func (a *AuthApi) EmailLogin() gin.HandlerFunc {
 //	@Accept		json
 //	@Param		dto_request.AuthGoogleLoginRequest	body	dto_request.AuthGoogleLoginRequest	true	"Body Request"
 //	@Produce	json
-//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{token=dto_response.AuthTokenResponse}}
+//	@Success	200	{object}	dto_response.Response{data=dto_response.DataResponse{google_login_data=dto_response.GoogleLoginResponse}}
 func (a *AuthApi) GoogleLogin() gin.HandlerFunc {
 	return a.Guest(
 		func(ctx apiContext) {
 			var request dto_request.AuthGoogleLoginRequest
 			ctx.mustBind(&request)
 
-			token := a.authUseCase.LoginGoogle(ctx.context(), request)
+			googleLoginData := a.authUseCase.LoginGoogle(ctx.context(), request)
 
 			ctx.json(
 				http.StatusOK,
 				dto_response.Response{
 					Data: dto_response.DataResponse{
-						"token": dto_response.NewAuthTokenResponse(token),
+						"google_login_data": dto_response.NewGoogleLoginResponse(googleLoginData),
 					},
 				},
 			)

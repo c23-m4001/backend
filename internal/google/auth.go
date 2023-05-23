@@ -64,6 +64,14 @@ type GoogleJwtPayload struct {
 	AtHash        string `json:"at_hash"`
 	Iat           int    `json:"iat"`
 	Exp           int    `json:"exp"`
+
+	ID            string `json:"id"`
+	VerifiedEmail bool   `json:"verified_email"`
+	Name          string `json:"name"`
+	GivenName     string `json:"given_name"`
+	FamilyName    string `json:"family_name"`
+	Picture       string `json:"picture"`
+	Locale        string `json:"locale"`
 }
 
 func (r GoogleJwtPayload) Valid() error {
@@ -80,17 +88,6 @@ func (r GoogleJwtPayload) Valid() error {
 	}
 
 	return nil
-}
-
-type GoogleUserDataResponse struct {
-	ID            string `json:"id"`
-	Email         string `json:"email"`
-	VerifiedEmail bool   `json:"verified_email"`
-	Name          string `json:"name"`
-	GivenName     string `json:"given_name"`
-	FamilyName    string `json:"family_name"`
-	Picture       string `json:"picture"`
-	Locale        string `json:"locale"`
 }
 
 type GoogleErrorResponse struct {

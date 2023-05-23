@@ -21,7 +21,7 @@ import (
 
 type AuthUseCase interface {
 	LoginEmail(ctx context.Context, request dto_request.AuthEmailLoginRequest) model.Token
-	LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.Token
+	LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.GoogleLoginData
 	RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token
 
 	LoginHistories(ctx context.Context) []model.UserAccessToken
@@ -140,7 +140,7 @@ func (u *authUseCase) LoginEmail(ctx context.Context, request dto_request.AuthEm
 	}
 }
 
-func (u *authUseCase) LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.Token {
+func (u *authUseCase) LoginGoogle(ctx context.Context, request dto_request.AuthGoogleLoginRequest) model.GoogleLoginData {
 	dataResponse, errorResponse, err := google.GoogleGetUserDataFromCode(request.Code)
 	if err != nil {
 		panic(err)
@@ -150,14 +150,35 @@ func (u *authUseCase) LoginGoogle(ctx context.Context, request dto_request.AuthG
 		panic(dto_response.NewBadRequestResponse("Sorry, we cannot recognize your account"))
 	}
 
-	// TODO: Need to register user if not registered yet
+	user, err := u.userRepository.GetByEmail(ctx, dataResponse.Email)
+	if err != nil && err != constant.ErrNoData {
+		panic(err)
+	}
 
-	return u.LoginEmail(
-		ctx,
-		dto_request.AuthEmailLoginRequest{
-			Email: dataResponse.Email,
-		},
-	)
+	if user == nil {
+		return model.GoogleLoginData{
+			UserData: &model.UserData{
+				Name:  dataResponse.Name,
+				Email: dataResponse.Email,
+			},
+			Token: nil,
+		}
+	} else {
+		accessToken, err := u.generateJwt(ctx, user.Id)
+		panicIfErr(err)
+
+		return model.GoogleLoginData{
+			UserData: &model.UserData{
+				Name:  user.Name,
+				Email: user.Email,
+			},
+			Token: &model.Token{
+				AccessToken:          accessToken.AccessToken,
+				AccessTokenExpiredAt: data_type.NewDateTime(accessToken.ExpiredAt),
+				TokenType:            accessToken.Type,
+			},
+		}
+	}
 }
 
 func (u *authUseCase) RegisterEmail(ctx context.Context, request dto_request.AuthEmailRegisterRequest) model.Token {

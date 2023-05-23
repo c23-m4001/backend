@@ -177,7 +177,7 @@ func (a *CategoryApi) Delete() gin.HandlerFunc {
 //	@Accept		json
 //	@Produce	json
 //	@Param		dto_request.CategoryOptionForTransactionFormRequest	body		dto_request.CategoryOptionForTransactionFormRequest	true	"Body Request"
-//	@Success	200									{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.CategoryResponse}}
+//	@Success	200													{object}	dto_response.Response{data=dto_response.PaginationResponse{nodes=[]dto_response.CategoryResponse}}
 func (a *CategoryApi) OptionForTransactionForm() gin.HandlerFunc {
 	return a.Authorize(
 		func(ctx apiContext) {
