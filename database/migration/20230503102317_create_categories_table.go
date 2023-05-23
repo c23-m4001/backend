@@ -10,6 +10,7 @@ func init() {
 				name varchar(255) NOT NULL,
 				is_global boolean NOT NULL,
 				is_expense boolean NOT NULL,
+				logo_type varchar(255) NOT NULL,
 				created_at timestamp NULL,
 				updated_at timestamp NULL,
 				CONSTRAINT categories_pk PRIMARY KEY (id),
