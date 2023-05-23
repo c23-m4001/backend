@@ -144,7 +144,7 @@ func (r *transactionRepository) Get(ctx context.Context, id string) (*model.Tran
 func (r *transactionRepository) GetSumAmountByWalletIdAndIsExpense(ctx context.Context, walletId *string, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
 		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When(squirrel.Eq{"is_expense": isExpense}, "-1 * amount").Else("amount"), ")")).
-		From(model.WalletTableName)
+		From(model.TransactionTableName)
 
 	if walletId != nil {
 		stmt = stmt.Where(squirrel.Eq{"wallet_id": walletId})
@@ -161,7 +161,7 @@ func (r *transactionRepository) GetSumAmountByWalletIdAndIsExpense(ctx context.C
 func (r *transactionRepository) GetSumAmountByWalletIdAndFromPreviousDateAndIsExpense(ctx context.Context, walletId *string, startingDate data_type.Date, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
 		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When(squirrel.Eq{"is_expense": isExpense}, "-1 * amount").Else("amount"), ")")).
-		From(model.WalletTableName).
+		From(model.TransactionTableName).
 		Where(squirrel.Lt{"date": startingDate})
 
 	if walletId != nil {
@@ -179,7 +179,7 @@ func (r *transactionRepository) GetSumAmountByWalletIdAndFromPreviousDateAndIsEx
 func (r *transactionRepository) GetSumAmountByWalletIdAndDateRangeAndIsExpense(ctx context.Context, walletId *string, startingDate data_type.Date, endingDate data_type.Date, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
 		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When(squirrel.Eq{"is_expense": isExpense}, "-1 * amount").Else("amount"), ")")).
-		From(model.WalletTableName).
+		From(model.TransactionTableName).
 		Where(squirrel.GtOrEq{"date": startingDate}).
 		Where(squirrel.Lt{"date": endingDate})
 
