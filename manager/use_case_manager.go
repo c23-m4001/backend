@@ -66,6 +66,7 @@ func newUseCaseManager(
 			baseUseCase,
 		),
 		transactionUseCase: use_case.NewTransactionUseCase(
+			repositoryManager.CompositeRepository(),
 			repositoryManager.TransactionRepository(),
 			baseUseCase,
 		),

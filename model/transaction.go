@@ -15,6 +15,8 @@ type Transaction struct {
 	Amount     float64        `db:"amount"`
 	Date       data_type.Date `db:"date"`
 	Timestamp
+
+	Category *Category `db:"-"`
 }
 
 func (m Transaction) TableName() string {

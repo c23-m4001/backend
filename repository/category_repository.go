@@ -16,6 +16,7 @@ type CategoryRepository interface {
 	// read
 	Count(ctx context.Context, options ...model.CategoryQueryOption) (int, error)
 	Fetch(ctx context.Context, options ...model.CategoryQueryOption) ([]model.Category, error)
+	FetchByIds(ctx context.Context, ids []string) ([]model.Category, error)
 	Get(ctx context.Context, id string) (*model.Category, error)
 	IsExist(ctx context.Context, id string) (bool, error)
 
@@ -125,6 +126,16 @@ func (r *categoryRepository) Fetch(ctx context.Context, options ...model.Categor
 	option.SetDefault()
 
 	stmt := r.prepareQuery(option)
+
+	return r.fetch(stmt)
+}
+
+func (r *categoryRepository) FetchByIds(ctx context.Context, ids []string) ([]model.Category, error) {
+	stmt := stmtBuilder.Select("*").
+		From(model.CategoryTableName).
+		Where(squirrel.Eq{
+			"id": ids,
+		})
 
 	return r.fetch(stmt)
 }

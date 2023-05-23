@@ -41,3 +41,9 @@ func (u *baseUseCase) mustGetCategory(ctx context.Context, categoryId string, is
 	panicIfRepositoryError(err, "Category data not found", isPath)
 	return *category
 }
+
+func (u *baseUseCase) mustAddWalletAmount(ctx context.Context, walletId string, amount float64) {
+	panicIfErr(
+		u.walletRepository.UpdateAddAmountById(ctx, walletId, amount),
+	)
+}

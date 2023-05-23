@@ -4,6 +4,7 @@ import (
 	"capstone/infrastructure"
 	"capstone/model"
 	"context"
+	"fmt"
 
 	"github.com/Masterminds/squirrel"
 )
@@ -23,6 +24,8 @@ type WalletRepository interface {
 
 	// update
 	Update(ctx context.Context, wallet *model.Wallet) error
+	UpdateAmount(ctx context.Context, wallet *model.Wallet) error
+	UpdateAddAmountById(ctx context.Context, walletId string, amount float64) error
 
 	// delete
 	Delete(ctx context.Context, wallet *model.Wallet) error
@@ -161,6 +164,21 @@ func (r *walletRepository) Update(ctx context.Context, wallet *model.Wallet) err
 	}
 	columns := extractColumnsFromBaseModel(wallet, excludedColumns)
 	return defaultUpdate(r.db, ctx, wallet, columns, nil)
+}
+
+func (r *walletRepository) UpdateAmount(ctx context.Context, wallet *model.Wallet) error {
+	return defaultUpdate(r.db, ctx, wallet, "total_amount", nil)
+}
+
+func (r *walletRepository) UpdateAddAmountById(ctx context.Context, walletId string, amount float64) error {
+	params := map[string]interface{}{
+		"amount": squirrel.Expr(fmt.Sprintf("amount + (%f)", amount)),
+	}
+	whereStmt := squirrel.Eq{
+		"id": walletId,
+	}
+
+	return update(r.db, model.WalletTableName, params, whereStmt)
 }
 
 func (r *walletRepository) Delete(ctx context.Context, wallet *model.Wallet) error {

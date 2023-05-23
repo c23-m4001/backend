@@ -3,6 +3,8 @@ package use_case
 import (
 	"capstone/constant"
 	"capstone/delivery/dto_response"
+
+	"golang.org/x/sync/errgroup"
 )
 
 var (
@@ -31,4 +33,13 @@ func panicIfRepositoryError(err error, message string, isPath bool) {
 		}
 		panic(err)
 	}
+}
+
+func await(fn func(group *errgroup.Group)) error {
+	group := new(errgroup.Group)
+	fn(group)
+	if err := group.Wait(); err != nil {
+		return err
+	}
+	return nil
 }
