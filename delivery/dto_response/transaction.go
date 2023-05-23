@@ -14,6 +14,7 @@ type TransactionResponse struct {
 	Date       data_type.Date `json:"date" example:"date"`
 
 	Category *CategoryResponse `json:"category" extensions:"x-nullable"`
+	Wallet   *WalletResponse   `json:"wallet" extensions:"x-nullable"`
 } // @name TransactionResponse
 
 func NewTransactionResponse(transaction model.Transaction) TransactionResponse {
@@ -28,6 +29,10 @@ func NewTransactionResponse(transaction model.Transaction) TransactionResponse {
 
 	if transaction.Category != nil {
 		r.Category = NewCategoryResponseP(*transaction.Category)
+	}
+
+	if transaction.Wallet != nil {
+		r.Wallet = NewWalletResponseP(*transaction.Wallet)
 	}
 
 	return r

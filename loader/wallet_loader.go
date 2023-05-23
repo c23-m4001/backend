@@ -11,8 +11,20 @@ import (
 )
 
 type WalletLoader struct {
+	loaderById               dataloader.Loader
 	loaderByUserId           dataloader.Loader
 	loaderHaveWalletByUserId dataloader.Loader
+}
+
+func (l *WalletLoader) loadById(id string) (*model.Wallet, error) {
+	thunk := l.loaderById.Load(context.TODO(), dataloader.StringKey(id))
+
+	result, err := thunk()
+	if err != nil {
+		return nil, err
+	}
+
+	return result.(*model.Wallet), nil
 }
 
 func (l *WalletLoader) loadByUserId(userId string) ([]model.Wallet, error) {
@@ -50,10 +62,53 @@ func (l *WalletLoader) UserFn(user *model.User) func() error {
 	}
 }
 
+func (l *WalletLoader) TransactionFn(transaction *model.Transaction) func() error {
+	return func() error {
+		wallet, err := l.loadById(transaction.WalletId)
+		if err != nil {
+			return err
+		}
+
+		transaction.Wallet = wallet
+
+		return nil
+	}
+}
+
 func NewWalletloader(
 	walletRepository repository.WalletRepository,
 ) *WalletLoader {
 	batchFn := func(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
+		ids := make([]string, len(keys))
+		for idx, k := range keys {
+			ids[idx] = k.String()
+		}
+
+		wallets, err := walletRepository.FetchByIds(ctx, ids)
+		if err != nil {
+			panic(err)
+		}
+
+		walletsById := map[string][]model.Wallet{}
+		for _, wallet := range wallets {
+			walletsById[wallet.Id] = append(walletsById[wallet.Id], wallet)
+		}
+
+		results := make([]*dataloader.Result, len(keys))
+		for idx, k := range keys {
+			var wallets []model.Wallet
+			if v, ok := walletsById[k.String()]; ok {
+				wallets = v
+			}
+
+			result := &dataloader.Result{Data: wallets, Error: nil}
+
+			results[idx] = result
+		}
+		return results
+	}
+
+	batchUserIdFn := func(ctx context.Context, keys dataloader.Keys) []*dataloader.Result {
 		ids := make([]string, len(keys))
 		for idx, k := range keys {
 			ids[idx] = k.String()
@@ -115,7 +170,8 @@ func NewWalletloader(
 	}
 
 	return &WalletLoader{
-		loaderByUserId:           newDataloader(batchFn),
+		loaderById:               newDataloader(batchFn),
+		loaderByUserId:           newDataloader(batchUserIdFn),
 		loaderHaveWalletByUserId: newDataloader(haveWalletBatchFn),
 	}
 }

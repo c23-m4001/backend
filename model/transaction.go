@@ -17,6 +17,7 @@ type Transaction struct {
 	Timestamp
 
 	Category *Category `db:"-"`
+	Wallet   *Wallet   `db:"-"`
 }
 
 func (m Transaction) TableName() string {

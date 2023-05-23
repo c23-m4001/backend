@@ -49,21 +49,25 @@ func NewTransactionUseCase(
 
 func (u *transactionUseCase) mustLoadTransactionData(transaction *model.Transaction) {
 	categoryLoader := loader.NewCategoryloader(u.baseUseCase.categoryRepository)
+	walletLoader := loader.NewWalletloader(u.baseUseCase.walletRepository)
 
 	panicIfErr(
 		await(func(group *errgroup.Group) {
 			group.Go(categoryLoader.TransactionFn(transaction))
+			group.Go(walletLoader.TransactionFn(transaction))
 		}),
 	)
 }
 
 func (u *transactionUseCase) mustLoadTransactionsData(transactions []model.Transaction) {
 	categoryLoader := loader.NewCategoryloader(u.baseUseCase.categoryRepository)
+	walletLoader := loader.NewWalletloader(u.baseUseCase.walletRepository)
 
 	panicIfErr(
 		await(func(group *errgroup.Group) {
 			for i := range transactions {
 				group.Go(categoryLoader.TransactionFn(&transactions[i]))
+				group.Go(walletLoader.TransactionFn(&transactions[i]))
 			}
 		}),
 	)
