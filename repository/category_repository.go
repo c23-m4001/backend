@@ -69,6 +69,10 @@ func (r *categoryRepository) prepareQuery(option model.CategoryQueryOption) squi
 		stmt = stmt.Where(squirrel.Eq{"is_expense": option.IsExpense})
 	}
 
+	if option.IsGlobal != nil {
+		stmt = stmt.Where(squirrel.Eq{"is_global": option.IsGlobal})
+	}
+
 	if option.UserId != nil {
 		andStatements = append(andStatements, squirrel.Eq{"user_id": option.UserId})
 	}

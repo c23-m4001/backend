@@ -37,6 +37,7 @@ type CategoryQueryOption struct {
 	QueryOption
 	IncludeGlobal *bool
 	IsExpense     *bool
+	IsGlobal      *bool
 	UserId        *string
 	Phrase        *string
 }

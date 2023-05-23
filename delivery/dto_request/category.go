@@ -14,6 +14,7 @@ type CategoryFetchRequest struct {
 	PaginationRequest
 	Sorts     CategoryFetchSorts `json:"sorts" validate:"unique=Field,dive"`
 	IsExpense *bool              `json:"is_expense"`
+	IsGlobal  *bool              `json:"is_global"`
 	Phrase    *string            `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name CategoryFetchRequest
 
