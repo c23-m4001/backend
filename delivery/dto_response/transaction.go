@@ -39,10 +39,10 @@ func NewTransactionResponseP(transaction model.Transaction) *TransactionResponse
 }
 
 type TransactionSummaryResponse struct {
-	StartingCash float64
-	TotalExpense float64
-	TotalIncome  float64
-	GrandTotal   float64
+	StartingCash float64 `json:"starting_cash" example:"0"`
+	TotalExpense float64 `json:"total_expense" example:"0"`
+	TotalIncome  float64 `json:"total_income" example:"0"`
+	GrandTotal   float64 `json:"grand_total" example:"0"`
 }
 
 func NewTransactionSummaryResponse(summary model.TransactionSummary) TransactionSummaryResponse {
@@ -57,9 +57,9 @@ func NewTransactionSummaryResponse(summary model.TransactionSummary) Transaction
 }
 
 type TransactionSummaryTotalResponse struct {
-	TotalExpense float64
-	TotalIncome  float64
-	GrandTotal   float64
+	TotalExpense float64 `json:"total_expense" example:"0"`
+	TotalIncome  float64 `json:"total_income" example:"0"`
+	GrandTotal   float64 `json:"grand_total" example:"0"`
 }
 
 func NewTransactionSummaryTotalResponse(summary model.TransactionSummaryTotal) TransactionSummaryTotalResponse {
