@@ -29,24 +29,27 @@ type CategoryUseCase interface {
 }
 
 type categoryUseCase struct {
-	categoryRepository repository.CategoryRepository
+	categoryRepository    repository.CategoryRepository
+	transactionRepository repository.TransactionRepository
 
 	baseUseCase *baseUseCase
 }
 
 func NewCategoryUseCase(
 	categoryRepository repository.CategoryRepository,
+	transactionRepository repository.TransactionRepository,
 	baseUseCase *baseUseCase,
 ) CategoryUseCase {
 	return &categoryUseCase{
-		categoryRepository: categoryRepository,
+		categoryRepository:    categoryRepository,
+		transactionRepository: transactionRepository,
 
 		baseUseCase: baseUseCase,
 	}
 }
 
 func (u *categoryUseCase) mustValidateAllowDelete(ctx context.Context, categoryId string) {
-	isExist, err := u.categoryRepository.IsExist(ctx, categoryId)
+	isExist, err := u.transactionRepository.IsExistByCategoryId(ctx, categoryId)
 	panicIfErr(err)
 
 	if isExist {

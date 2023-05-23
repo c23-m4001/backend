@@ -63,6 +63,7 @@ func newUseCaseManager(
 		),
 		categoryUseCase: use_case.NewCategoryUseCase(
 			repositoryManager.CategoryRepository(),
+			repositoryManager.TransactionRepository(),
 			baseUseCase,
 		),
 		transactionUseCase: use_case.NewTransactionUseCase(

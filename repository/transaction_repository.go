@@ -18,8 +18,8 @@ type TransactionRepository interface {
 	Count(ctx context.Context, options ...model.TransactionQueryOption) (int, error)
 	Fetch(ctx context.Context, options ...model.TransactionQueryOption) ([]model.Transaction, error)
 	Get(ctx context.Context, id string) (*model.Transaction, error)
-	IsExistByCategoryId(ctx context.Context, categoryId string) (bool, error)
 	GetSumAmountFromPreviousDate(ctx context.Context, startingDate data_type.Date) (float64, error)
+	IsExistByCategoryId(ctx context.Context, categoryId string) (bool, error)
 
 	// update
 	Update(ctx context.Context, transaction *model.Transaction) error
@@ -139,17 +139,6 @@ func (r *transactionRepository) Get(ctx context.Context, id string) (*model.Tran
 	return r.get(stmt)
 }
 
-func (r *transactionRepository) IsExistByCategoryId(ctx context.Context, categoryId string) (bool, error) {
-	stmt := stmtBuilder.Select().Column(
-		stmtBuilder.Select("1").
-			From(model.TransactionTableName).
-			Where(squirrel.Eq{"category_id": categoryId}).
-			Prefix("EXISTS (").Suffix(")"),
-	)
-
-	return isExist(r.db, stmt)
-}
-
 func (r *transactionRepository) GetSumAmountFromPreviousDate(ctx context.Context, startingDate data_type.Date) (float64, error) {
 	stmt := stmtBuilder.Select().
 		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When("is_expense = true", "-1 * amount").Else("amount"), ")")).
@@ -162,6 +151,17 @@ func (r *transactionRepository) GetSumAmountFromPreviousDate(ctx context.Context
 	}
 
 	return sumTotal, nil
+}
+
+func (r *transactionRepository) IsExistByCategoryId(ctx context.Context, categoryId string) (bool, error) {
+	stmt := stmtBuilder.Select().Column(
+		stmtBuilder.Select("1").
+			From(model.TransactionTableName).
+			Where(squirrel.Eq{"category_id": categoryId}).
+			Prefix("EXISTS (").Suffix(")"),
+	)
+
+	return isExist(r.db, stmt)
 }
 
 func (r *transactionRepository) Update(ctx context.Context, transaction *model.Transaction) error {
