@@ -37,3 +37,37 @@ func NewTransactionResponseP(transaction model.Transaction) *TransactionResponse
 	r := NewTransactionResponse(transaction)
 	return &r
 }
+
+type TransactionSummaryResponse struct {
+	StartingCash float64
+	TotalExpense float64
+	TotalIncome  float64
+	GrandTotal   float64
+}
+
+func NewTransactionSummaryResponse(summary model.TransactionSummary) TransactionSummaryResponse {
+	r := TransactionSummaryResponse{
+		StartingCash: summary.StartingCash,
+		TotalExpense: summary.TotalExpense,
+		TotalIncome:  summary.TotalIncome,
+		GrandTotal:   summary.GrandTotal(),
+	}
+
+	return r
+}
+
+type TransactionSummaryTotalResponse struct {
+	TotalExpense float64
+	TotalIncome  float64
+	GrandTotal   float64
+}
+
+func NewTransactionSummaryTotalResponse(summary model.TransactionSummaryTotal) TransactionSummaryTotalResponse {
+	r := TransactionSummaryTotalResponse{
+		TotalExpense: summary.TotalExpense,
+		TotalIncome:  summary.TotalIncome,
+		GrandTotal:   summary.GrandTotal(),
+	}
+
+	return r
+}

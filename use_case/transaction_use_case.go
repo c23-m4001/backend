@@ -18,9 +18,9 @@ type TransactionUseCase interface {
 
 	// read
 	Fetch(ctx context.Context, request dto_request.TransactionFetchRequest) ([]model.Transaction, int)
-	// TODO: make summary api
-	// GetSummary(ctx context.Context)
 	Get(ctx context.Context, request dto_request.TransactionGetRequest) model.Transaction
+	GetSummary(ctx context.Context, request dto_request.TransactionGetSummaryRequest) model.TransactionSummary
+	GetSummaryTotal(ctx context.Context, request dto_request.TransactionGetSummaryTotalRequest) model.TransactionSummaryTotal
 
 	// update
 	Update(ctx context.Context, request dto_request.TransactionUpdateRequest) model.Transaction
@@ -132,6 +132,39 @@ func (u *transactionUseCase) Get(ctx context.Context, request dto_request.Transa
 	u.mustLoadTransactionData(&transaction)
 
 	return transaction
+}
+
+func (u *transactionUseCase) GetSummary(ctx context.Context, request dto_request.TransactionGetSummaryRequest) model.TransactionSummary {
+	totalPreviousExpense, err := u.transactionRepository.GetSumAmountFromPreviousDateAndIsExpense(ctx, request.StartDate, true)
+	panicIfErr(err)
+
+	totalPreviousIncome, err := u.transactionRepository.GetSumAmountFromPreviousDateAndIsExpense(ctx, request.StartDate, false)
+	panicIfErr(err)
+
+	totalCurrentExpense, err := u.transactionRepository.GetSumAmountByDateRangeAndIsExpense(ctx, request.StartDate, request.EndDate, true)
+	panicIfErr(err)
+
+	totalCurrentIncome, err := u.transactionRepository.GetSumAmountByDateRangeAndIsExpense(ctx, request.StartDate, request.EndDate, false)
+	panicIfErr(err)
+
+	return model.TransactionSummary{
+		StartingCash: totalPreviousIncome - totalPreviousExpense,
+		TotalIncome:  totalCurrentIncome,
+		TotalExpense: totalCurrentExpense,
+	}
+}
+
+func (u *transactionUseCase) GetSummaryTotal(ctx context.Context, request dto_request.TransactionGetSummaryTotalRequest) model.TransactionSummaryTotal {
+	totalExpense, err := u.transactionRepository.GetSumAmountByIsExpense(ctx, true)
+	panicIfErr(err)
+
+	totalIncome, err := u.transactionRepository.GetSumAmountByIsExpense(ctx, false)
+	panicIfErr(err)
+
+	return model.TransactionSummaryTotal{
+		TotalIncome:  totalIncome,
+		TotalExpense: totalExpense,
+	}
 }
 
 func (u *transactionUseCase) Update(ctx context.Context, request dto_request.TransactionUpdateRequest) model.Transaction {

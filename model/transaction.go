@@ -41,6 +41,25 @@ func (m Transaction) ToMap() map[string]interface{} {
 	}
 }
 
+type TransactionSummaryTotal struct {
+	TotalIncome  float64
+	TotalExpense float64
+}
+
+func (m TransactionSummaryTotal) GrandTotal() float64 {
+	return m.TotalIncome - m.TotalExpense
+}
+
+type TransactionSummary struct {
+	StartingCash float64
+	TotalIncome  float64
+	TotalExpense float64
+}
+
+func (m TransactionSummary) GrandTotal() float64 {
+	return m.StartingCash + m.TotalIncome - m.TotalExpense
+}
+
 type TransactionQueryOption struct {
 	QueryOption
 

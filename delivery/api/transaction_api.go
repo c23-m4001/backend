@@ -78,6 +78,60 @@ func (a *TransactionApi) Fetch() gin.HandlerFunc {
 	)
 }
 
+//	@Router		/transactions/summary [post]
+//	@Summary	Fetch Summary Transaction List
+//	@tags		Transaction
+//	@Accept		json
+//	@Produce	json
+//	@Param		dto_request.TransactionGetSummaryRequest	body		dto_request.TransactionGetSummaryRequest	true	"Body Request"
+//	@Success	200									{object}	dto_response.Response{data=dto_response.DataResponse{summary=dto_response.TransactionSummaryResponse}}
+func (a *TransactionApi) GetSummary() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			var request dto_request.TransactionGetSummaryRequest
+			ctx.mustBind(&request)
+
+			summary := a.transactionUseCase.GetSummary(ctx.context(), request)
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.DataResponse{
+						"summary": dto_response.NewTransactionSummaryResponse(summary),
+					},
+				},
+			)
+		},
+	)
+}
+
+//	@Router		/transactions/summary-total [post]
+//	@Summary	Fetch Summary Total Transaction List
+//	@tags		Transaction
+//	@Accept		json
+//	@Produce	json
+//	@Param		dto_request.TransactionGetSummaryTotalRequest	body		dto_request.TransactionGetSummaryTotalRequest	true	"Body Request"
+//	@Success	200									{object}	dto_response.Response{data=dto_response.DataResponse{summary_total=[]dto_response.TransactionSummaryTotalResponse}}
+func (a *TransactionApi) GetSummaryTotal() gin.HandlerFunc {
+	return a.Authorize(
+		func(ctx apiContext) {
+			var request dto_request.TransactionGetSummaryTotalRequest
+			ctx.mustBind(&request)
+
+			summaryTotal := a.transactionUseCase.GetSummaryTotal(ctx.context(), request)
+
+			ctx.json(
+				http.StatusOK,
+				dto_response.Response{
+					Data: dto_response.DataResponse{
+						"summary_total": dto_response.NewTransactionSummaryTotalResponse(summaryTotal),
+					},
+				},
+			)
+		},
+	)
+}
+
 //	@Router		/transactions/{id} [get]
 //	@Summary	Get
 //	@tags		Transaction
@@ -180,6 +234,8 @@ func RegisterTransactionApi(router gin.IRouter, useCaseManager manager.UseCaseMa
 
 	routerGroup.POST("", api.Create())
 	routerGroup.POST("/filter", api.Fetch())
+	routerGroup.POST("/summary", api.GetSummary())
+	routerGroup.POST("/summary-total", api.GetSummaryTotal())
 	routerGroup.GET("/:id", api.Get())
 	routerGroup.PUT("/:id", api.Update())
 	routerGroup.DELETE("/:id", api.Delete())

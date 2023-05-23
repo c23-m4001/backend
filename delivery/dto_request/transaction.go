@@ -29,6 +29,18 @@ type TransactionFetchRequest struct {
 	Phrase *string `json:"phrase" validate:"omitempty,not_empty" extensions:"x-nullable"`
 } // @name TransactionFetchRequest
 
+type TransactionGetSummaryTotalRequest struct {
+	CategoryId *string `json:"category_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+	WalletId   *string `json:"wallet_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+} // @name TransactionGetSummaryTotalRequest
+
+type TransactionGetSummaryRequest struct {
+	StartDate  data_type.Date `json:"start_date" format:"YYYY-MM-DD" example:"2006-01-02"`
+	EndDate    data_type.Date `json:"end_date" format:"YYYY-MM-DD" example:"2006-01-02"`
+	CategoryId *string        `json:"category_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+	WalletId   *string        `json:"wallet_id" validate:"omitempty,not_empty,uuid" example:"116e6126-77ce-45ab-8e4d-f7cc2b00cccf" extensions:"x-nullable"`
+} // @name TransactionGetSummaryRequest
+
 type TransactionGetRequest struct {
 	TransactionId string `json:"-" swaggerignore:"true"`
 } // @name TransactionGetRequest

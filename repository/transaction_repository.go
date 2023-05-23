@@ -18,7 +18,9 @@ type TransactionRepository interface {
 	Count(ctx context.Context, options ...model.TransactionQueryOption) (int, error)
 	Fetch(ctx context.Context, options ...model.TransactionQueryOption) ([]model.Transaction, error)
 	Get(ctx context.Context, id string) (*model.Transaction, error)
-	GetSumAmountFromPreviousDate(ctx context.Context, startingDate data_type.Date) (float64, error)
+	GetSumAmountByIsExpense(ctx context.Context, isExpense bool) (float64, error)
+	GetSumAmountFromPreviousDateAndIsExpense(ctx context.Context, startingDate data_type.Date, isExpense bool) (float64, error)
+	GetSumAmountByDateRangeAndIsExpense(ctx context.Context, startingDate data_type.Date, endingDate data_type.Date, isExpense bool) (float64, error)
 	IsExistByCategoryId(ctx context.Context, categoryId string) (bool, error)
 
 	// update
@@ -139,11 +141,39 @@ func (r *transactionRepository) Get(ctx context.Context, id string) (*model.Tran
 	return r.get(stmt)
 }
 
-func (r *transactionRepository) GetSumAmountFromPreviousDate(ctx context.Context, startingDate data_type.Date) (float64, error) {
+func (r *transactionRepository) GetSumAmountByIsExpense(ctx context.Context, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
-		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When("is_expense = true", "-1 * amount").Else("amount"), ")")).
+		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When(squirrel.Eq{"is_expense": isExpense}, "-1 * amount").Else("amount"), ")")).
+		From(model.WalletTableName)
+
+	sumTotal := 0.0
+	if err := get(r.db, &sumTotal, stmt); err != nil {
+		return 0, err
+	}
+
+	return sumTotal, nil
+}
+
+func (r *transactionRepository) GetSumAmountFromPreviousDateAndIsExpense(ctx context.Context, startingDate data_type.Date, isExpense bool) (float64, error) {
+	stmt := stmtBuilder.Select().
+		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When(squirrel.Eq{"is_expense": isExpense}, "-1 * amount").Else("amount"), ")")).
 		From(model.WalletTableName).
 		Where(squirrel.Lt{"date": startingDate})
+
+	sumTotal := 0.0
+	if err := get(r.db, &sumTotal, stmt); err != nil {
+		return 0, err
+	}
+
+	return sumTotal, nil
+}
+
+func (r *transactionRepository) GetSumAmountByDateRangeAndIsExpense(ctx context.Context, startingDate data_type.Date, endingDate data_type.Date, isExpense bool) (float64, error) {
+	stmt := stmtBuilder.Select().
+		Column(squirrel.ConcatExpr("SUM(", squirrel.Case().When(squirrel.Eq{"is_expense": isExpense}, "-1 * amount").Else("amount"), ")")).
+		From(model.WalletTableName).
+		Where(squirrel.GtOrEq{"date": startingDate}).
+		Where(squirrel.Lt{"date": endingDate})
 
 	sumTotal := 0.0
 	if err := get(r.db, &sumTotal, stmt); err != nil {
