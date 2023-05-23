@@ -144,9 +144,10 @@ func (r *transactionRepository) Get(ctx context.Context, id string) (*model.Tran
 
 func (r *transactionRepository) GetSumAmountByWalletIdAndIsExpense(ctx context.Context, walletId *string, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
-		Column(squirrel.ConcatExpr("COALESCE(SUM(", squirrel.Case().When(squirrel.Eq{"c.is_expense": isExpense}, "-1 * t.amount").Else("t.amount"), "),0)")).
+		Column("SUM(t.amount)").
 		From(fmt.Sprintf("%s t", model.TransactionTableName)).
-		InnerJoin(fmt.Sprintf("%s c ON c.id = t.category_id", model.CategoryTableName))
+		InnerJoin(fmt.Sprintf("%s c ON c.id = t.category_id", model.CategoryTableName)).
+		Where(squirrel.Eq{"c.is_expense": isExpense})
 
 	if walletId != nil {
 		stmt = stmt.Where(squirrel.Eq{"t.wallet_id": walletId})
@@ -162,9 +163,10 @@ func (r *transactionRepository) GetSumAmountByWalletIdAndIsExpense(ctx context.C
 
 func (r *transactionRepository) GetSumAmountByWalletIdAndFromPreviousDateAndIsExpense(ctx context.Context, walletId *string, startingDate data_type.Date, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
-		Column(squirrel.ConcatExpr("COALESCE(SUM(", squirrel.Case().When(squirrel.Eq{"c.is_expense": isExpense}, "-1 * t.amount").Else("t.amount"), "),0)")).
+		Column("SUM(t.amount)").
 		From(fmt.Sprintf("%s t", model.TransactionTableName)).
 		InnerJoin(fmt.Sprintf("%s c ON c.id = t.category_id", model.CategoryTableName)).
+		Where(squirrel.Eq{"c.is_expense": isExpense}).
 		Where(squirrel.Lt{"t.date": startingDate})
 
 	if walletId != nil {
@@ -181,9 +183,10 @@ func (r *transactionRepository) GetSumAmountByWalletIdAndFromPreviousDateAndIsEx
 
 func (r *transactionRepository) GetSumAmountByWalletIdAndDateRangeAndIsExpense(ctx context.Context, walletId *string, startingDate data_type.Date, endingDate data_type.Date, isExpense bool) (float64, error) {
 	stmt := stmtBuilder.Select().
-		Column(squirrel.ConcatExpr("COALESCE(SUM(", squirrel.Case().When(squirrel.Eq{"c.is_expense": isExpense}, "-1 * t.amount").Else("t.amount"), "),0)")).
+		Column("SUM(t.amount)").
 		From(fmt.Sprintf("%s t", model.TransactionTableName)).
 		InnerJoin(fmt.Sprintf("%s c ON c.id = t.category_id", model.CategoryTableName)).
+		Where(squirrel.Eq{"c.is_expense": isExpense}).
 		Where(squirrel.GtOrEq{"t.date": startingDate}).
 		Where(squirrel.Lt{"t.date": endingDate})
 
