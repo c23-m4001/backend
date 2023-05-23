@@ -11,7 +11,15 @@ func init() {
 		SchemaProps: spec.SchemaProps{
 			Type: []string{"string"},
 			Enum: []interface{}{
-				"DEFAULT",
+				"CASH",
+				"BANK",
+				"CREDIT_CARD",
+				"LOAN",
+				"INSURANCE",
+				"INVESTMENT",
+				"MORTGAGE",
+				"BONUS",
+				"OTHER",
 			},
 		},
 	}

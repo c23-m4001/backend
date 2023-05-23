@@ -13,14 +13,14 @@ var (
 		UserId:      UserOne.Id,
 		Name:        "Cash",
 		TotalAmount: 0,
-		LogoType:    data_type.WalletLogoTypeDefault,
+		LogoType:    data_type.WalletLogoTypeCash,
 	}
 	WalletTwo = model.Wallet{
 		Id:          "d2ddbc33-3b4b-4dc3-8eb3-a9709e95e725",
 		UserId:      UserOne.Id,
 		Name:        "Bank",
 		TotalAmount: 0,
-		LogoType:    data_type.WalletLogoTypeDefault,
+		LogoType:    data_type.WalletLogoTypeBank,
 	}
 )
 

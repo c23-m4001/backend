@@ -4,5 +4,13 @@ package data_type
 type WalletLogoType int // @name WalletLogoTypeEnum
 
 const (
-	WalletLogoTypeDefault WalletLogoType = iota + 1 // DEFAULT
+	WalletLogoTypeCash       WalletLogoType = iota + 1 // CASH
+	WalletLogoTypeBank                                 // BANK
+	WalletLogoTypeCreditCard                           // CREDIT_CARD
+	WalletLogoTypeLoan                                 // LOAN
+	WalletLogoTypeInsurance                            // INSURANCE
+	WalletLogoTypeInvestment                           // INVESTMENT
+	WalletLogoTypeMortgage                             // MORTGAGE
+	WalletLogoTypeBonus                                // BONUS
+	WalletLogoTypeOther                                // OTHER
 )

@@ -13,19 +13,43 @@ func _() {
 	// An "invalid array index" compiler error signifies that the constant values have changed.
 	// Re-run the stringer command to generate them again.
 	var x [1]struct{}
-	_ = x[WalletLogoTypeDefault-1]
+	_ = x[WalletLogoTypeCash-1]
+	_ = x[WalletLogoTypeBank-2]
+	_ = x[WalletLogoTypeCreditCard-3]
+	_ = x[WalletLogoTypeLoan-4]
+	_ = x[WalletLogoTypeInsurance-5]
+	_ = x[WalletLogoTypeInvestment-6]
+	_ = x[WalletLogoTypeMortgage-7]
+	_ = x[WalletLogoTypeBonus-8]
+	_ = x[WalletLogoTypeOther-9]
 }
 
-const _WalletLogoType_nameReadable = "DEFAULT"
+const _WalletLogoType_nameReadable = "CASH, BANK, CREDIT_CARD, LOAN, INSURANCE, INVESTMENT, MORTGAGE, BONUS, OTHER"
 
-const _WalletLogoType_name = "DEFAULT"
+const _WalletLogoType_name = "CASHBANKCREDIT_CARDLOANINSURANCEINVESTMENTMORTGAGEBONUSOTHER"
 
-var _WalletLogoType_index = [...]uint8{0, 7}
+var _WalletLogoType_index = [...]uint8{0, 4, 8, 19, 23, 32, 42, 50, 55, 60}
 
 func (i *WalletLogoType) determine(s string) {
 	switch s {
-	case "DEFAULT":
-		*i = WalletLogoTypeDefault
+	case "CASH":
+		*i = WalletLogoTypeCash
+	case "BANK":
+		*i = WalletLogoTypeBank
+	case "CREDIT_CARD":
+		*i = WalletLogoTypeCreditCard
+	case "LOAN":
+		*i = WalletLogoTypeLoan
+	case "INSURANCE":
+		*i = WalletLogoTypeInsurance
+	case "INVESTMENT":
+		*i = WalletLogoTypeInvestment
+	case "MORTGAGE":
+		*i = WalletLogoTypeMortgage
+	case "BONUS":
+		*i = WalletLogoTypeBonus
+	case "OTHER":
+		*i = WalletLogoTypeOther
 	default:
 		*i = 0
 	}
@@ -94,12 +118,28 @@ func WalletLogoTypeP(v WalletLogoType) *WalletLogoType {
 
 func ListWalletLogoType() []WalletLogoType {
 	return []WalletLogoType{
-		WalletLogoTypeDefault,
+		WalletLogoTypeCash,
+		WalletLogoTypeBank,
+		WalletLogoTypeCreditCard,
+		WalletLogoTypeLoan,
+		WalletLogoTypeInsurance,
+		WalletLogoTypeInvestment,
+		WalletLogoTypeMortgage,
+		WalletLogoTypeBonus,
+		WalletLogoTypeOther,
 	}
 }
 
 func ListWalletLogoTypeString() []string {
 	return []string{
-		WalletLogoTypeDefault.String(),
+		WalletLogoTypeCash.String(),
+		WalletLogoTypeBank.String(),
+		WalletLogoTypeCreditCard.String(),
+		WalletLogoTypeLoan.String(),
+		WalletLogoTypeInsurance.String(),
+		WalletLogoTypeInvestment.String(),
+		WalletLogoTypeMortgage.String(),
+		WalletLogoTypeBonus.String(),
+		WalletLogoTypeOther.String(),
 	}
 }
