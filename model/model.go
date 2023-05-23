@@ -132,7 +132,7 @@ type PaginationOption struct {
 }
 
 func (o PaginationOption) Prepare(stmt squirrel.SelectBuilder) squirrel.SelectBuilder {
-	if o.Page != nil && o.Limit != nil && *o.Page > 1 && *o.Limit > 0 {
+	if o.Page != nil && o.Limit != nil && *o.Page > 0 && *o.Limit > 0 {
 		offset := (*o.Page - 1) * *o.Limit
 		stmt = stmt.Limit(uint64(*o.Limit))
 		stmt = stmt.Offset(uint64(offset))
