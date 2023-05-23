@@ -16,7 +16,7 @@ type UserApi struct {
 	userUseCase use_case.UserUseCase
 }
 
-//	@Router		/users/me [post]
+//	@Router		/users/me [get]
 //	@Summary	Get Current Logged In User Data
 //	@tags		User
 //	@Accept		json
@@ -48,5 +48,5 @@ func RegisterUserApi(router gin.IRouter, useCaseManager manager.UseCaseManager) 
 
 	routerGroup := router.Group("/users")
 
-	routerGroup.POST("/me", api.Me())
+	routerGroup.GET("/me", api.Me())
 }
