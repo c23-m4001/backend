@@ -89,19 +89,23 @@ func NewWalletloader(
 			panic(err)
 		}
 
-		walletsById := map[string][]model.Wallet{}
+		walletsById := map[string]*model.Wallet{}
 		for _, wallet := range wallets {
-			walletsById[wallet.Id] = append(walletsById[wallet.Id], wallet)
+			walletsById[wallet.Id] = &wallet
 		}
 
 		results := make([]*dataloader.Result, len(keys))
 		for idx, k := range keys {
-			var wallets []model.Wallet
+			var wallet *model.Wallet
 			if v, ok := walletsById[k.String()]; ok {
-				wallets = v
+				wallet = v
 			}
 
-			result := &dataloader.Result{Data: wallets, Error: nil}
+			result := &dataloader.Result{Data: wallet, Error: nil}
+
+			if wallet == nil {
+				result.Error = constant.ErrNoData
+			}
 
 			results[idx] = result
 		}
