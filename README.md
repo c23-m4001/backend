@@ -1,9 +1,10 @@
 # Moneta
 Moneta is a Web-based application to manage our daily cashflow.
 
+## Techstack
 | Golang | PostgreSQL | JWT | Gin | Github |
 | --- | --- | --- | --- | --- |
-|  <img width="100" src="https://raw.githubusercontent.com/get-icon/geticon/fc0f660daee147afb4a56c64e12bde6486b73e39/icons/go.svg" /> | <img width="100" src="https://raw.githubusercontent.com/get-icon/geticon/fc0f660daee147afb4a56c64e12bde6486b73e39/icons/postgresql.svg" /> | <img width="100" src="https://cdn.worldvectorlogo.com/logos/jwt-3.svg" /> | <img width="100" src="https://raw.githubusercontent.com/gin-gonic/logo/master/color.png" /> | <img width="100" src="https://raw.githubusercontent.com/get-icon/geticon/fc0f660daee147afb4a56c64e12bde6486b73e39/icons/github.svg" /> |
+| <a href="https://go.dev"><img width="100" src="https://github.com/c23-m4001/.github/raw/master/assets/go.png" /></a> | <a href="https://www.postgresql.org"><img width="100" src="https://github.com/c23-m4001/.github/raw/master/assets/postgresql.png" /></a> | <a href="https://jwt.io"><img width="100" src="https://github.com/c23-m4001/.github/raw/master/assets/jwt.svg" /></a> | <a href="https://gin-gonic.com"><img width="100" src="https://github.com/c23-m4001/.github/raw/master/assets/gin.png" /></a> | <a href="https://github.com"><img width="100" src="https://github.com/c23-m4001/.github/raw/master/assets/github.png" /></a> |
 
 ## Deployment
 
