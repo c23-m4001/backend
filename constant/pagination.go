@@ -1,6 +1,6 @@
 package constant
 
 const (
-	PaginationDefaultLimit = 10
+	PaginationDefaultLimit = 100
 	PaginationDefaultPage  = 1
 )
